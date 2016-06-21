@@ -22,8 +22,12 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
         $this->publishEntities();
         $this->publishRepositories();
 		
+		$this->loadViewsFrom(__DIR__.'/../../views/', 'fleetany-web-attributes');
+		
         // Routes
-        include __DIR__.'/../../routes.php';
+		if (! $this->app->routesAreCached()) {
+			require __DIR__.'/../../routes.php';
+		}
     }
 	
 	/**

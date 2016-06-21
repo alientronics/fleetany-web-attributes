@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Repositories\AttributeRepositoryEloquent;
 use App\Entities\Key;
-use Log;
 use Lang;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\CompanyRepositoryEloquent;
+use GuzzleHttp\Client;
+use function GuzzleHttp\json_decode;
 
 class AttributeController extends Controller
 {
@@ -51,13 +51,22 @@ class AttributeController extends Controller
     public function store()
     {
         try {
-            $this->attributeRepo->validator();
+            
             $inputs = $this->request->all();
-            $this->attributeRepo->create($inputs);
-            return $this->redirect->to('attribute')->with('message', Lang::get(
-                'general.succefullcreate',
-                ['table'=> Lang::get('attributes.Attribute')]
-            ));
+            $inputs['company_id'] = Auth::user()['company_id'];
+            $client = new Client();
+            $response = $client->request('POST', 'http://localhost:8000/api/v1/key', [
+                'form_params' => $inputs
+            ]);
+
+            if((string)$response->getBody() == '"created"') {
+                return $this->redirect->to('attribute')->with('message', Lang::get(
+                    'general.succefullcreate',
+                    ['table'=> Lang::get('attributes.Attribute')]
+                ));
+            } else {
+                return $this->redirect->back();
+            }
         } catch (ValidatorException $e) {
             return $this->redirect->back()->withInput()
                    ->with('errors', $e->getMessageBag());
@@ -66,51 +75,64 @@ class AttributeController extends Controller
     
     public function edit($idAttribute)
     {
-        $attribute = $this->attributeRepo->find($idAttribute);
-        $this->helper->validateRecord($attribute);
-
-        $entity_key = ['vehicle' => 'vehicle'];
-        $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select',
-                    'checkbox' => 'checkbox', 'file' => 'file'];
+        try {
+            $client = new Client();
+            $response = $client->request('GET', 'http://localhost:8000/api/v1/key/' . $idAttribute);
         
-        return view("attribute.edit", compact('attribute', 'entity_key', 'type'));
+            $attribute = json_decode((string)$response->getBody());
+            $entity_key = ['vehicle' => 'vehicle'];
+            $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select',
+                'checkbox' => 'checkbox', 'file' => 'file'];
+            
+            return view("attribute.edit", compact('attribute', 'entity_key', 'type'));
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
+        }
     }
     
     public function update($idAttribute)
     {
         try {
-            $attribute = $this->attributeRepo->find($idAttribute);
-            $this->helper->validateRecord($attribute);
-            $this->attributeRepo->validator();
+            
             $inputs = $this->request->all();
-            $this->attributeRepo->update($inputs, $idAttribute);
-            $this->session->flash(
-                'message',
-                Lang::get(
+            $inputs['company_id'] = Auth::user()['company_id'];
+            $client = new Client();
+            $response = $client->request('PUT', 'http://localhost:8000/api/v1/key/' . $idAttribute, [
+                'form_params' => $inputs
+            ]);
+
+            if((string)$response->getBody() == '"updated"') {
+                return $this->redirect->to('attribute')->with('message', Lang::get(
                     'general.succefullupdate',
                     ['table'=> Lang::get('attributes.Attribute')]
-                )
-            );
-            return $this->redirect->to('attribute');
+                ));
+            } else {
+                return $this->redirect->back();
+            }
         } catch (ValidatorException $e) {
             return $this->redirect->back()->withInput()
-                    ->with('errors', $e->getMessageBag());
+                   ->with('errors', $e->getMessageBag());
         }
     }
     
     public function destroy($idAttribute)
     {
-        $hasReferences = $this->attributeRepo->hasReferences($idAttribute);
-        $attribute = $this->attributeRepo->find($idAttribute);
-        if ($attribute && !$hasReferences) {
-            $this->helper->validateRecord($attribute);
-            Log::info('Delete field: '.$idAttribute);
-            $this->attributeRepo->delete($idAttribute);
-            return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregister"));
-        } elseif ($hasReferences) {
-            return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregisterhasreferences"));
-        } else {
-            return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregistererror"));
+        try {
+            
+            $inputs = $this->request->all();
+            $inputs['company_id'] = Auth::user()['company_id'];
+            $client = new Client();
+            $response = $client->request('DELETE', 'http://localhost:8000/api/v1/key/' . $idAttribute);
+
+            if((string)$response->getBody() == '"deleted"') {
+                return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregister"));
+            } else {
+                return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregistererror"));
+            }
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
         }
     }
 }

@@ -71,4 +71,17 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         
         return $attributes;
     }
+    
+    public static function getAttributesValues($entity_key = null)
+    {
+        $attribute = new \stdClass();
+        $attribute->type = 'string';
+        $attribute->attribute_id = 1;
+        $attribute->value = 2;
+        $attribute->description = 'description';
+        $attribute->options = explode(",",'option1,option2,option3');
+        $attributes = [$attribute];
+        
+        return $attributes;
+    }
 }
