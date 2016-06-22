@@ -8,8 +8,6 @@ use App\Entities\Key;
 use Lang;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Support\Facades\Auth;
-use GuzzleHttp\Client;
-use function GuzzleHttp\json_decode;
 
 class AttributeController extends Controller
 {
@@ -54,12 +52,10 @@ class AttributeController extends Controller
             
             $inputs = $this->request->all();
             $inputs['company_id'] = Auth::user()['company_id'];
-            $client = new Client();
-            $response = $client->request('POST', 'http://localhost:8000/api/v1/key', [
-                'form_params' => $inputs
-            ]);
-
-            if((string)$response->getBody() == '"created"') {
+            
+            $response = AttributeRepositoryEloquent::createKey($inputs);
+            
+            if($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(
                     'general.succefullcreate',
                     ['table'=> Lang::get('attributes.Attribute')]
@@ -76,10 +72,7 @@ class AttributeController extends Controller
     public function edit($idAttribute)
     {
         try {
-            $client = new Client();
-            $response = $client->request('GET', 'http://localhost:8000/api/v1/key/' . $idAttribute);
-        
-            $attribute = json_decode((string)$response->getBody());
+            $attribute = AttributeRepositoryEloquent::getKey($idAttribute);
             $entity_key = ['vehicle' => 'vehicle'];
             $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select',
                 'checkbox' => 'checkbox', 'file' => 'file'];
@@ -97,12 +90,10 @@ class AttributeController extends Controller
             
             $inputs = $this->request->all();
             $inputs['company_id'] = Auth::user()['company_id'];
-            $client = new Client();
-            $response = $client->request('PUT', 'http://localhost:8000/api/v1/key/' . $idAttribute, [
-                'form_params' => $inputs
-            ]);
-
-            if((string)$response->getBody() == '"updated"') {
+            
+            $response = AttributeRepositoryEloquent::updateKey($idAttribute, $inputs);
+            
+            if($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(
                     'general.succefullupdate',
                     ['table'=> Lang::get('attributes.Attribute')]
@@ -120,12 +111,9 @@ class AttributeController extends Controller
     {
         try {
             
-            $inputs = $this->request->all();
-            $inputs['company_id'] = Auth::user()['company_id'];
-            $client = new Client();
-            $response = $client->request('DELETE', 'http://localhost:8000/api/v1/key/' . $idAttribute);
-
-            if((string)$response->getBody() == '"deleted"') {
+            $response = AttributeRepositoryEloquent::deleteKey($idAttribute);
+            
+            if($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregister"));
             } else {
                 return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregistererror"));

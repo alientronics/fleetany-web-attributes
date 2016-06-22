@@ -61,7 +61,53 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         return false;
     }
     
-    public static function getAttributes($entity_key)
+    public static function getKey($idKey)
+    {
+        $client = new Client();
+        $response = $client->request('GET', 'http://localhost:8000/api/v1/key/' . $idKey);
+        
+        return json_decode((string)$response->getBody());
+    }
+    
+    public static function updateKey($idKey, $inputs) {
+        $client = new Client();
+        $response = $client->request('PUT', 'http://localhost:8000/api/v1/key/' . $idKey, [
+            'form_params' => $inputs
+        ]);
+        
+        if((string)$response->getBody() == '"updated"') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public static function createKey($inputs) {
+        
+        $client = new Client();
+        $response = $client->request('POST', 'http://localhost:8000/api/v1/key', [
+            'form_params' => $inputs
+        ]);
+        
+        if((string)$response->getBody() == '"created"') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public static function deleteKey($idKey) {
+        $client = new Client();
+        $response = $client->request('DELETE', 'http://localhost:8000/api/v1/key/' . $idKey);
+        
+        if((string)$response->getBody() == '"deleted"') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public static function getKeys($entity_key)
     {
         try {
             $client = new Client();
@@ -94,7 +140,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     public static function getAttributesWithValues($entity_key, $entity_id = null)
     {
         try {
-            $attributes = self::getAttributes($entity_key);
+            $attributes = self::getKeys($entity_key);
 
             if(empty($entity_id) && !empty($attributes)) {
                 foreach ($attributes as $key => $value) {
