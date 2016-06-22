@@ -7,6 +7,8 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\AttributeRepository;
 use App\Entities\Key;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class AttributeRepositoryEloquent extends BaseRepository implements AttributeRepository
 {
@@ -59,29 +61,99 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         return false;
     }
     
-    public static function getAttributes($entity_key = null)
+    public static function getAttributes($entity_key)
     {
-        $attributes = Key::where('company_id', Auth::user()['company_id']);
+        try {
+            $client = new Client();
+            $response = $client->request('GET', 'http://localhost:8000/api/v1/key/'.
+                Auth::user()['company_id'].'/'.$entity_key);
         
-        if (!empty($entity_key)) {
-            $attributes = $attributes->where('entity_key', $entity_key);
+            return json_decode((string)$response->getBody());
+            
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
         }
-        
-        $attributes = $attributes->lists('description', 'id');
-        
-        return $attributes;
     }
     
-    public static function getAttributesValues($entity_key = null)
+    public static function getValues($entity_key, $entity_id)
     {
-        $attribute = new \stdClass();
-        $attribute->type = 'string';
-        $attribute->attribute_id = 1;
-        $attribute->value = 2;
-        $attribute->description = 'description';
-        $attribute->options = explode(",",'option1,option2,option3');
-        $attributes = [$attribute];
+        try {
+            $client = new Client();
+            $response = $client->request('GET', 'http://localhost:8000/api/v1/values/'.
+               $entity_key.'/'.$entity_id);
         
-        return $attributes;
+            return json_decode((string)$response->getBody());
+            
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
+        }
+    }
+    
+    public static function getAttributesWithValues($entity_key, $entity_id = null)
+    {
+        try {
+            $attributes = self::getAttributes($entity_key);
+
+            if(empty($entity_id) && !empty($attributes)) {
+                foreach ($attributes as $key => $value) {
+                    $attributes[$key]->value = "";
+                }
+            } else if(!empty($entity_id) && !empty($attributes)) {
+                $values = self::getValues($entity_key, $entity_id);
+                
+                $valuesIndexedByAttr = [];
+                if(!empty($values)) {
+                    foreach ($values as $value) {
+                        $valuesIndexedByAttr[$value->attribute_id] = $value->value;
+                    }
+                }
+                
+                foreach ($attributes as $key => $value) {
+                    if(!empty($valuesIndexedByAttr[$value->id])) {
+                        $attributes[$key]->value = $valuesIndexedByAttr[$value->id];
+                    } else {
+                        $attributes[$key]->value = "";
+                    }
+                }
+            } else {
+                $attributes = [];
+            }
+
+            return $attributes;
+            
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
+        }
+    }
+    
+    public static function setValues($inputs)
+    {
+        try {
+
+            $entity_id = $inputs['entity_id'];
+            $entity_key = $inputs['entity_key'];
+            
+            foreach ($inputs as $key => $value) {
+                if(substr($key, 0, 9) == "attribute") {
+                    $inputs[substr($key, 9)] = $value;
+                }
+                unset($inputs[$key]);
+            }
+
+            $client = new Client();
+            $response = $client->request('POST', 'http://localhost:8000/api/v1/values/'.
+                $entity_key.'/'.$entity_id, [
+                    'form_params' => ['attributes' => $inputs]
+            ]);
+        
+            return json_decode((string)$response->getBody());
+            
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
+        }
     }
 }
