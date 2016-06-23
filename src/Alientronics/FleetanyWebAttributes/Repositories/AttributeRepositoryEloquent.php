@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use function GuzzleHttp\json_encode;
+use function GuzzleHttp\json_decode;
 
 class AttributeRepositoryEloquent extends BaseRepository implements AttributeRepository
 {
@@ -105,7 +107,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         }
     }
     
-    public function getKeys($entity_key, $description = '-')
+    public static function getKeys($entity_key, $description = '-')
     {
         try {
             $client = new Client();
@@ -142,7 +144,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
 
             if(empty($entity_id) && !empty($attributes)) {
                 foreach ($attributes as $key => $value) {
-                    $attributes[$key]->value = "";
+                    $attributes[$key] = self::setAttributesProperties($attributes[$key]);
                 }
             } else if(!empty($entity_id) && !empty($attributes)) {
                 $values = self::getValues($entity_key, $entity_id);
@@ -155,11 +157,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
                 }
                 
                 foreach ($attributes as $key => $value) {
-                    if(!empty($valuesIndexedByAttr[$value->id])) {
-                        $attributes[$key]->value = $valuesIndexedByAttr[$value->id];
-                    } else {
-                        $attributes[$key]->value = "";
-                    }
+                    $attributes[$key] = self::setAttributesProperties($attributes[$key], $valuesIndexedByAttr[$value->id]);
                 }
             } else {
                 $attributes = [];
@@ -173,6 +171,37 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         }
     }
     
+    private static function setAttributesProperties($attribute, $value = []) {
+
+        if($attribute->type == 'checkbox' && empty($value)) {
+            $attribute->value = [];
+        } else if(empty($value)) {
+            $attribute->value = "";
+        } else if($attribute->type == 'checkbox') {
+            $attribute->value = json_decode($value);
+        } else {
+            $attribute->value = $value;
+        }
+        $attribute->options = self::getOptions($attribute->options);
+        
+        return $attribute;
+    }
+    
+    private static function getOptions($options) {
+        if(empty(($options))) {
+            return [];
+        }
+        
+        $options = explode(",", $options);
+        
+        $returnOptions = [];
+        foreach ($options as $key => $value) {
+            $returnOptions[$value] = $value;            
+        }
+
+        return $returnOptions;
+    }
+    
     public static function setValues($inputs)
     {
         try {
@@ -182,7 +211,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
             
             foreach ($inputs as $key => $value) {
                 if(substr($key, 0, 9) == "attribute") {
-                    $inputs[substr($key, 9)] = $value;
+                    $inputs[substr($key, 9)] = is_array($value) ? json_encode($value) : $value;
                 }
                 unset($inputs[$key]);
             }

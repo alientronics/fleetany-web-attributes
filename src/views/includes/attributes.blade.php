@@ -19,12 +19,22 @@
             	<span class="mdl-textfield__error">{{ $errors->first('attribute'.$attribute->id) }}</span>
             </div>
 		@elseif($attribute->type == 'checkbox')
-			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label @if ($errors->has('attribute'.$attribute->id)) is-invalid is-dirty @endif"">
-                {!!Form::checkbox('attribute'.$attribute->id, $attribute->value, ['class' => 'mdl-textfield__input'])!!}
+			<div class="mdl-textfield mdl-js-textfield is-upgraded is-focused mdl-textfield--floating-label @if ($errors->has('attribute'.$attribute->id)) is-invalid is-dirty @endif"" data-upgraded="eP">
+         		@foreach($attribute->options as $option)
+             		<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="attribute{{$attribute->id}}{{$option}}">
+                      <input name="attribute{{$attribute->id}}[]" type="checkbox" id="attribute{{$attribute->id}}{{$option}}" class="mdl-checkbox__input" value={{$option}} @if(in_array($option, $attribute->value)) checked @endif />
+                      <span class="mdl-checkbox__label">{{$option}}</span>
+                    </label>
+                @endforeach
+            	{!!Form::label('attribute'.$attribute->id, $attribute->description, ['class' => 'mdl-color-text--primary-contrast mdl-textfield__label is-dirty'])!!}
+				<span class="mdl-textfield__error">{{ $errors->first('attribute'.$attribute->id) }}</span>
+			</div>
+		@elseif($attribute->type == 'file')
+			<div class="mdl-textfield mdl-js-textfield is-upgraded is-focused mdl-textfield--floating-label @if ($errors->has('attribute'.$attribute->id)) is-invalid is-dirty @endif"">
+                {!!Form::file('attribute'.$attribute->id, $attribute->value, ['id' => 'attribute'.$attribute->id, 'class' => 'mdl-textfield__input'])!!}
             	{!!Form::label('attribute'.$attribute->id, $attribute->description, ['class' => 'mdl-color-text--primary-contrast mdl-textfield__label is-dirty'])!!}
             	<span class="mdl-textfield__error">{{ $errors->first('attribute'.$attribute->id) }}</span>
             </div>
-		@elseif($attribute->type == 'file')
 		@endif
     
 	@endforeach
