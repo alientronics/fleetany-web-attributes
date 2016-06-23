@@ -53,7 +53,7 @@ class AttributeController extends Controller
             $inputs = $this->request->all();
             $inputs['company_id'] = Auth::user()['company_id'];
             
-            $response = AttributeRepositoryEloquent::createKey($inputs);
+            $response = $this->attributeRepo->createKey($inputs);
             
             if($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(
@@ -72,7 +72,7 @@ class AttributeController extends Controller
     public function edit($idAttribute)
     {
         try {
-            $attribute = AttributeRepositoryEloquent::getKey($idAttribute);
+            $attribute = $this->attributeRepo->getKey($idAttribute);
             $entity_key = ['vehicle' => 'vehicle'];
             $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select',
                 'checkbox' => 'checkbox', 'file' => 'file'];
@@ -91,7 +91,7 @@ class AttributeController extends Controller
             $inputs = $this->request->all();
             $inputs['company_id'] = Auth::user()['company_id'];
             
-            $response = AttributeRepositoryEloquent::updateKey($idAttribute, $inputs);
+            $response = $this->attributeRepo->updateKey($idAttribute, $inputs);
             
             if($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(
@@ -111,7 +111,7 @@ class AttributeController extends Controller
     {
         try {
             
-            $response = AttributeRepositoryEloquent::deleteKey($idAttribute);
+            $response = $this->attributeRepo->deleteKey($idAttribute);
             
             if($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregister"));

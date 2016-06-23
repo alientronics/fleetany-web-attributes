@@ -9,6 +9,7 @@ use App\Entities\Key;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AttributeRepositoryEloquent extends BaseRepository implements AttributeRepository
 {
@@ -30,24 +31,21 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     
     public function results($filters = [])
     {
-        $attributes = $this->scopeQuery(function ($query) use ($filters) {
-
-            $query = $query->select('*', 'entity_key as entity-key', 'entity_key as entity-key');
-            
-            if (!empty($filters['entity-key'])) {
-                $query = $query->where('entity_key', 'like', '%'.$filters['entity-key'].'%');
-            }
-            if (!empty($filters['description'])) {
-                $query = $query->where('description', 'like', '%'.$filters['description'].'%');
-            }
-
-            $query = $query->where('company_id', Auth::user()['company_id']);
-            $query = $query->orderBy($filters['sort'], $filters['order']);
-            
-            return $query;
-        })->paginate($filters['paginate']);
+        if(empty($filters['entity-key'])) {
+            $filters['entity-key'] = '-';
+        }
         
-        return $attributes;
+        if(empty($filters['description'])) {
+            $filters['description'] = '-';
+        }
+        
+        $attributes = self::getKeys($filters['entity-key'], $filters['description']);
+        
+        $filters['page'] = 1;
+        $currentPageSearchResults = array_slice($attributes, $filters['paginate'] * ($filters['page'] - 1), $filters['paginate']);
+        $paginatedSearchResults = new LengthAwarePaginator($currentPageSearchResults, count($attributes), $filters['paginate'], $filters['page']);
+
+        return $paginatedSearchResults;
     }
     
     public function hasReferences($idAttribute)
@@ -61,17 +59,17 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         return false;
     }
     
-    public static function getKey($idKey)
+    public function getKey($idKey)
     {
         $client = new Client();
-        $response = $client->request('GET', 'http://localhost:8000/api/v1/key/' . $idKey);
+        $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/key/' . $idKey);
         
         return json_decode((string)$response->getBody());
     }
     
-    public static function updateKey($idKey, $inputs) {
+    public function updateKey($idKey, $inputs) {
         $client = new Client();
-        $response = $client->request('PUT', 'http://localhost:8000/api/v1/key/' . $idKey, [
+        $response = $client->request('PUT', config('app.attributes_api_url').'/api/v1/key/' . $idKey, [
             'form_params' => $inputs
         ]);
         
@@ -82,10 +80,10 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         }
     }
     
-    public static function createKey($inputs) {
+    public function createKey($inputs) {
         
         $client = new Client();
-        $response = $client->request('POST', 'http://localhost:8000/api/v1/key', [
+        $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/key', [
             'form_params' => $inputs
         ]);
         
@@ -96,9 +94,9 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         }
     }
     
-    public static function deleteKey($idKey) {
+    public function deleteKey($idKey) {
         $client = new Client();
-        $response = $client->request('DELETE', 'http://localhost:8000/api/v1/key/' . $idKey);
+        $response = $client->request('DELETE', config('app.attributes_api_url').'/api/v1/key/' . $idKey);
         
         if((string)$response->getBody() == '"deleted"') {
             return true;
@@ -107,12 +105,12 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         }
     }
     
-    public static function getKeys($entity_key)
+    public function getKeys($entity_key, $description = '-')
     {
         try {
             $client = new Client();
-            $response = $client->request('GET', 'http://localhost:8000/api/v1/key/'.
-                Auth::user()['company_id'].'/'.$entity_key);
+            $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/keys/'.
+                Auth::user()['company_id'].'/'.$entity_key.'/'.$description);
         
             return json_decode((string)$response->getBody());
             
@@ -122,11 +120,11 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         }
     }
     
-    public static function getValues($entity_key, $entity_id)
+    public function getValues($entity_key, $entity_id)
     {
         try {
             $client = new Client();
-            $response = $client->request('GET', 'http://localhost:8000/api/v1/values/'.
+            $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/values/'.
                $entity_key.'/'.$entity_id);
         
             return json_decode((string)$response->getBody());
@@ -190,7 +188,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
             }
 
             $client = new Client();
-            $response = $client->request('POST', 'http://localhost:8000/api/v1/values/'.
+            $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/'.
                 $entity_key.'/'.$entity_id, [
                     'form_params' => ['attributes' => $inputs]
             ]);
