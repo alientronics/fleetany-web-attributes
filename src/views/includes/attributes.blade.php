@@ -20,9 +20,9 @@
             </div>
 		@elseif($attribute->type == 'checkbox')
 			<div class="mdl-textfield mdl-js-textfield is-upgraded is-focused mdl-textfield--floating-label @if ($errors->has('attribute'.$attribute->id)) is-invalid is-dirty @endif"" data-upgraded="eP">
-         		@foreach($attribute->options as $option)
+         		@foreach($attribute->options as $i => $option)
              		<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="attribute{{$attribute->id}}{{$option}}">
-                      <input name="attribute{{$attribute->id}}[]" type="checkbox" id="attribute{{$attribute->id}}{{$option}}" class="mdl-checkbox__input" value={{$option}} @if(in_array($option, $attribute->value)) checked @endif />
+                      <input name="attribute{{$attribute->id}}[]" type="checkbox" id="attribute{{$attribute->id}}{{$i}}" class="mdl-checkbox__input" value="{{$option}}" @if(in_array($option, $attribute->value)) checked @endif />
                       <span class="mdl-checkbox__label">{{$option}}</span>
                     </label>
                 @endforeach

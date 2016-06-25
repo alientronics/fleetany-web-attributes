@@ -8,6 +8,7 @@ use App\Entities\Key;
 use Lang;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\TypeRepositoryEloquent;
 
 class AttributeController extends Controller
 {
@@ -41,6 +42,19 @@ class AttributeController extends Controller
     {
         $attribute = new Key();
         $entity_key = ['vehicle' => 'vehicle'];
+        
+        foreach ($entity_key as $entity_key_value) {
+            $entity_key_types = TypeRepositoryEloquent::getTypes($entity_key_value)->toArray();
+            if(!empty($entity_key_types)) {
+                foreach ($entity_key_types as $entity_key_type) {
+                    $entity_key_type = $entity_key_value.".".$entity_key_type;
+                    $entity_key[$entity_key_type] = $entity_key_type;
+                }
+            }
+        }
+        
+        asort($entity_key);
+        
         $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select', 
                     'checkbox' => 'checkbox', 'file' => 'file'];
         return view("attribute.edit", compact('attribute', 'entity_key', 'type'));

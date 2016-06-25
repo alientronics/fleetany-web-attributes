@@ -122,7 +122,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         }
     }
     
-    public function getValues($entity_key, $entity_id)
+    public static function getValues($entity_key, $entity_id)
     {
         try {
             $client = new Client();
@@ -157,6 +157,9 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
                 }
                 
                 foreach ($attributes as $key => $value) {
+                    if(empty($valuesIndexedByAttr[$value->id])) {
+                        $valuesIndexedByAttr[$value->id] = [];
+                    }
                     $attributes[$key] = self::setAttributesProperties($attributes[$key], $valuesIndexedByAttr[$value->id]);
                 }
             } else {
