@@ -16,21 +16,21 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-		$this->publishViews();
+        $this->publishViews();
         $this->publishTranslations();
         $this->publishControllers();
         $this->publishEntities();
         $this->publishRepositories();
-		
-		$this->loadViewsFrom(__DIR__.'/../../views/', 'fleetany-web-attributes');
-		
+        
+        $this->loadViewsFrom(__DIR__.'/../../views/', 'fleetany-web-attributes');
+        
         // Routes
-		if (! $this->app->routesAreCached()) {
-			require __DIR__.'/../../routes.php';
-		}
+        if (! $this->app->routesAreCached()) {
+            require __DIR__.'/../../routes.php';
+        }
     }
-	
-	/**
+    
+    /**
      * Publish the views files to the application views directory
      */
     public function publishViews()
@@ -39,8 +39,8 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
             __DIR__ . '/../../views/' => base_path('/resources/views'),
         ], 'translations');
     }
-	
-	/**
+    
+    /**
      * Publish the translations files to the application translations directory
      */
     public function publishTranslations()
@@ -49,8 +49,8 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
             __DIR__ . '/../../translations/' => base_path('/resources/lang'),
         ], 'translations');
     }
-	
-	/**
+    
+    /**
      * Publish the controllers files to the application controllers directory
      */
     public function publishControllers()
@@ -59,8 +59,8 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
             __DIR__ . '/Controllers/' => base_path('/app/Http/Controllers'),
         ], 'controllers');
     }
-	
-	/**
+    
+    /**
      * Publish the entities files to the application entities directory
      */
     public function publishEntities()
@@ -69,8 +69,8 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
             __DIR__ . '/Entities/' => base_path('/app/Entities'),
         ], 'entities');
     }
-	
-	/**
+    
+    /**
      * Publish the repositories files to the application repositories directory
      */
     public function publishRepositories()

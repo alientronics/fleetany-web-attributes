@@ -4,7 +4,8 @@ use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class Value extends BaseModel {
+class Value extends BaseModel
+{
 
     /**
      * Generated
@@ -16,7 +17,8 @@ class Value extends BaseModel {
     protected $fillable = ['entity_key', 'entity_id', 'attribute_id', 'value'];
 
 
-    public function key() {
+    public function key()
+    {
         return $this->belongsTo(\App\Entities\Key::class, 'attribute_id', 'id');
     }
     
@@ -27,6 +29,4 @@ class Value extends BaseModel {
             $value->company_id = ( $value->company_id ?: Auth::user()['company_id'] );
         });
     }
-
-
 }

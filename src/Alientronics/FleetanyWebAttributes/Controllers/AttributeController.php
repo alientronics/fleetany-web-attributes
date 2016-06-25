@@ -45,7 +45,7 @@ class AttributeController extends Controller
         
         foreach ($entity_key as $entity_key_value) {
             $entity_key_types = TypeRepositoryEloquent::getTypes($entity_key_value)->toArray();
-            if(!empty($entity_key_types)) {
+            if (!empty($entity_key_types)) {
                 foreach ($entity_key_types as $entity_key_type) {
                     $entity_key_type = $entity_key_value.".".$entity_key_type;
                     $entity_key[$entity_key_type] = $entity_key_type;
@@ -55,7 +55,7 @@ class AttributeController extends Controller
         
         asort($entity_key);
         
-        $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select', 
+        $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select',
                     'checkbox' => 'checkbox', 'file' => 'file'];
         return view("attribute.edit", compact('attribute', 'entity_key', 'type'));
     }
@@ -63,13 +63,12 @@ class AttributeController extends Controller
     public function store()
     {
         try {
-            
             $inputs = $this->request->all();
             $inputs['company_id'] = Auth::user()['company_id'];
             
             $response = $this->attributeRepo->createKey($inputs);
             
-            if($response) {
+            if ($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(
                     'general.succefullcreate',
                     ['table'=> Lang::get('attributes.Attribute')]
@@ -101,13 +100,12 @@ class AttributeController extends Controller
     public function update($idAttribute)
     {
         try {
-            
             $inputs = $this->request->all();
             $inputs['company_id'] = Auth::user()['company_id'];
             
             $response = $this->attributeRepo->updateKey($idAttribute, $inputs);
             
-            if($response) {
+            if ($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(
                     'general.succefullupdate',
                     ['table'=> Lang::get('attributes.Attribute')]
@@ -124,10 +122,9 @@ class AttributeController extends Controller
     public function destroy($idAttribute)
     {
         try {
-            
             $response = $this->attributeRepo->deleteKey($idAttribute);
             
-            if($response) {
+            if ($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregister"));
             } else {
                 return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregistererror"));

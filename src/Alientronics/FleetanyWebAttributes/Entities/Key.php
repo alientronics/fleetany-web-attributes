@@ -4,7 +4,8 @@ use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class Key extends BaseModel {
+class Key extends BaseModel
+{
 
     /**
      * Generated
@@ -16,7 +17,8 @@ class Key extends BaseModel {
     protected $fillable = ['entity_key', 'description', 'type', 'options'];
 
 
-    public function values() {
+    public function values()
+    {
         return $this->hasMany(\App\Entities\Value::class, 'attribute_id', 'id');
     }
     
