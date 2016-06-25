@@ -31,8 +31,8 @@ class AcceptanceTestCase extends BaseTestCase
 
         return $app;
     }
-	
-	public function setUp()
+    
+    public function setUp()
     {
         parent::setUp();
         $this->be(User::find(1));

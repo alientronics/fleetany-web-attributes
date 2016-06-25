@@ -68,7 +68,7 @@ class AttributeControllerTest extends AcceptanceTestCase
     public function testFilters()
     {
         $this->visit('/attribute')
-			->type('contact', 'entity_key')
+            ->type('contact', 'entity_key')
             ->type('Description 2', 'description')
             ->press('Buscar')
             ->see('contact</div>')
@@ -80,15 +80,15 @@ class AttributeControllerTest extends AcceptanceTestCase
     {
         $this->visit('/attribute?id=&entity-key=&description=&sort=entity-key-desc')
             ->see('mode_edit</i>');
-			
+            
         $this->visit('/attribute?id=&entity-key=&description=&sort=entity-key-asc')
             ->see('mode_edit</i>');
-			
+            
         $this->visit('/attribute?id=&entity-key=&description=&sort=edescription-desc')
             ->see('mode_edit</i>');
-			
+            
         $this->visit('/attribute?id=&entity-key=&description=&sort=description-asc')
-            ->see('mode_edit</i>');      
+            ->see('mode_edit</i>');
     }
     
     public function testDelete()

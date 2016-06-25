@@ -17,5 +17,4 @@ class ValueModelTest extends UnitTestCase
     
         $this->assertEquals($value->key->description, $key->description);
     }
-    
 }
