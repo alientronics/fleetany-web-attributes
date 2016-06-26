@@ -4,9 +4,31 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "68abc25736f94b6b53e09ff10f286d83",
-    "content-hash": "8f77faefe4da00ceba171d5aeb2f59a7",
+    "hash": "09d48dd87a7526dd12be240c5d0c9f50",
+    "content-hash": "d7934b42a95eb5087656494abb3ff430",
     "packages": [
+        {
+            "name": "alientronics/fleetany-attributes",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alientronics/fleetany-attributes.git",
+                "reference": "master"
+            },
+            "type": "library",
+            "time": "2016-06-25 07:17:40"
+        },
+        {
+            "name": "alientronics/fleetany-web",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alientronics/fleetany-web.git",
+                "reference": "master"
+            },
+            "type": "library",
+            "time": "2016-06-26 22:01:46"
+        },
         {
             "name": "classpreloader/classpreloader",
             "version": "dev-master",
@@ -1903,6 +1925,56 @@
             "time": "2016-03-31 10:24:22"
         },
         {
+            "name": "fzaninotto/faker",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "bd2b5953b24f09febe56cb41ac12b52dc018ccda"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/bd2b5953b24f09febe56cb41ac12b52dc018ccda",
+                "reference": "bd2b5953b24f09febe56cb41ac12b52dc018ccda",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3|^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2016-06-23 08:49:49"
+        },
+        {
             "name": "guzzle/guzzle",
             "version": "v3.8.1",
             "source": {
@@ -3782,6 +3854,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "alientronics/fleetany-web": 20,
+        "alientronics/fleetany-attributes": 20,
         "codeclimate/php-test-reporter": 20
     },
     "prefer-stable": false,
