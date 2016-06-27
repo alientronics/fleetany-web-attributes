@@ -18,9 +18,6 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
     {
         $this->publishViews();
         $this->publishTranslations();
-        $this->publishControllers();
-        $this->publishEntities();
-        $this->publishRepositories();
         
         $this->loadViewsFrom(__DIR__.'/../../views/', 'fleetany-web-attributes');
         
@@ -50,36 +47,6 @@ class FleetanyWebAttributesServiceProvider extends ServiceProvider
         ], 'translations');
     }
     
-    /**
-     * Publish the controllers files to the application controllers directory
-     */
-    public function publishControllers()
-    {
-        $this->publishes([
-            __DIR__ . '/Controllers/' => base_path('/app/Http/Controllers'),
-        ], 'controllers');
-    }
-    
-    /**
-     * Publish the entities files to the application entities directory
-     */
-    public function publishEntities()
-    {
-        $this->publishes([
-            __DIR__ . '/Entities/' => base_path('/app/Entities'),
-        ], 'entities');
-    }
-    
-    /**
-     * Publish the repositories files to the application repositories directory
-     */
-    public function publishRepositories()
-    {
-        $this->publishes([
-            __DIR__ . '/Repositories/' => base_path('/app/Repositories'),
-        ], 'repositories');
-    }
-
     /**
      * Register the service provider.
      *

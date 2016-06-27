@@ -8,18 +8,6 @@
     }
   ],
   "repositories": [
-    {
-        "type": "package",
-        "package": {
-            "version": "dev-master",
-            "name": "alientronics/fleetany-web",
-            "source": {
-                "url": "https://github.com/alientronics/fleetany-web.git",
-                "type": "git",
-                "reference": "master"
-            }
-        }
-    },
 	{
 		"type": "package",
 		"package": {
@@ -36,7 +24,6 @@
   "require": {
     "php": ">=5.4.0",
     "illuminate/support": "^5.2",
-    "alientronics/fleetany-web": "dev-master",
     "alientronics/fleetany-attributes": "dev-master"
   },
   "require-dev": {
@@ -52,7 +39,6 @@
   },
   "autoload": {
 	"classmap": [
-		"vendor/alientronics/fleetany-web/",
 		"vendor/alientronics/fleetany-attributes/"
 	],
 	"psr-4": {
@@ -62,7 +48,7 @@
   "autoload-dev": {
 	"classmap": [
 		"tests/",
-		"vendor/alientronics/fleetany-web/database/"
+		"vendor/alientronics/fleetany-attributes/database/"
 	],
     "psr-4": {
       "App\\": "vendor/laravel/laravel/app/",
