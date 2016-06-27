@@ -153,7 +153,9 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         try {
             $attributes = self::getKeys($entity_key);
 
-            if (empty($entity_id) && !empty($attributes)) {
+            if (config('app.attributes_api_url') == 'SomeUrl') {
+                return [];
+            } elseif (empty($entity_id) && !empty($attributes)) {
                 foreach ($attributes as $key => $value) {
                     $attributes[$key] = self::setAttributesProperties($attributes[$key]);
                 }
@@ -177,7 +179,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
                     );
                 }
             } else {
-                $attributes = [];
+                return [];
             }
 
             return $attributes;
