@@ -23,10 +23,11 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/support": "^5.2",
-    "alientronics/fleetany-attributes": "dev-master"
+    "illuminate/support": "^5.2"
   },
   "require-dev": {
+    "laravel/lumen-framework": "5.2.*",
+    "alientronics/fleetany-attributes": "dev-master",
     "fzaninotto/faker": "~1.4",
     "phpunit/phpunit": "~4.0",
     "laravel/framework": "5.2.*",
@@ -38,9 +39,6 @@
     "codeclimate/php-test-reporter": "dev-master"
   },
   "autoload": {
-	"classmap": [
-		"vendor/alientronics/fleetany-attributes/"
-	],
 	"psr-4": {
       "Alientronics\\FleetanyWebAttributes\\": "src/Alientronics/FleetanyWebAttributes"
     }
@@ -48,7 +46,7 @@
   "autoload-dev": {
 	"classmap": [
 		"tests/",
-		"vendor/alientronics/fleetany-attributes/database/"
+		"vendor/alientronics/fleetany-attributes/"
 	],
     "psr-4": {
       "App\\": "vendor/laravel/laravel/app/",
@@ -58,7 +56,6 @@
     "scripts": {
         "post-install-cmd": [
             "php -r \"copy('src/routes.php', 'vendor/laravel/laravel/app/Http/routes.php');\"",
-            "php -r \"copy('tests/config-app.php', 'vendor/laravel/laravel/config/app.php');\"",
             "mkdir vendor/laravel/laravel/resources/views/layouts/",
             "php -r \"copy('tests/config-app.php', 'vendor/laravel/laravel/resources/views/layouts/login.blade.php');\""
         ]
