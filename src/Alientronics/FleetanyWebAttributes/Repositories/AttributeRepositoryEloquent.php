@@ -2,10 +2,6 @@
 
 namespace Alientronics\FleetanyWebAttributes\Repositories;
 
-use Prettus\Repository\Eloquent\BaseRepository;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Alientronics\FleetanyWebAttributes\Repositories\AttributeRepository;
-use App\Entities\Key;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -34,16 +30,6 @@ class AttributeRepositoryEloquent
             self::$client = new Client();
         }
         return self::$client;
-    }
-
-    public function model()
-    {
-        return Key::class;
-    }
-
-    public function boot()
-    {
-        $this->pushCriteria(app(RequestCriteria::class));
     }
     
     public function results($filters = [])
@@ -85,18 +71,18 @@ class AttributeRepositoryEloquent
         return false;
     }
     
-    public function getKey($idKey)
+    public function getKey($key)
     {
         $client = self::getClient();
-        $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/key/' . $idKey);
+        $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/key/' . $key);
         
         return json_decode((string)$response->getBody());
     }
     
-    public function updateKey($idKey, $inputs)
+    public function updateKey($key, $inputs)
     {
         $client = self::getClient();
-        $response = $client->request('PUT', config('app.attributes_api_url').'/api/v1/key/' . $idKey, [
+        $response = $client->request('PUT', config('app.attributes_api_url').'/api/v1/key/' . $key, [
             'form_params' => $inputs
         ]);
         
@@ -122,10 +108,10 @@ class AttributeRepositoryEloquent
         }
     }
     
-    public function deleteKey($idKey)
+    public function deleteKey($key)
     {
         $client = self::getClient();
-        $response = $client->request('DELETE', config('app.attributes_api_url').'/api/v1/key/' . $idKey);
+        $response = $client->request('DELETE', config('app.attributes_api_url').'/api/v1/key/' . $key);
         
         if ((string)$response->getBody() == '"deleted"') {
             return true;
