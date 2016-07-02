@@ -74,7 +74,8 @@ class AttributeRepositoryEloquent
     public function getKey($key)
     {
         $client = self::getClient();
-        $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/key/' . $key);
+        $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/key/' . $key.
+            '?api_token=' . config('app.attributes_api_key'));
         
         return json_decode((string)$response->getBody());
     }
@@ -82,9 +83,10 @@ class AttributeRepositoryEloquent
     public function updateKey($key, $inputs)
     {
         $client = self::getClient();
-        $response = $client->request('PUT', config('app.attributes_api_url').'/api/v1/key/' . $key, [
+        $response = $client->request('PUT', config('app.attributes_api_url').'/api/v1/key/' . $key.
+            '?api_token=' . config('app.attributes_api_key'), [
             'form_params' => $inputs
-        ]);
+            ]);
         
         if ((string)$response->getBody() == '"updated"') {
             return true;
@@ -97,9 +99,10 @@ class AttributeRepositoryEloquent
     {
         
         $client = self::getClient();
-        $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/key', [
+        $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/key'.
+            '?api_token=' . config('app.attributes_api_key'), [
             'form_params' => $inputs
-        ]);
+            ]);
         
         if ((string)$response->getBody() == '"created"') {
             return true;
@@ -111,7 +114,8 @@ class AttributeRepositoryEloquent
     public function deleteKey($key)
     {
         $client = self::getClient();
-        $response = $client->request('DELETE', config('app.attributes_api_url').'/api/v1/key/' . $key);
+        $response = $client->request('DELETE', config('app.attributes_api_url').'/api/v1/key/' . $key.
+            '?api_token=' . config('app.attributes_api_key'));
         
         if ((string)$response->getBody() == '"deleted"') {
             return true;
@@ -125,7 +129,8 @@ class AttributeRepositoryEloquent
         try {
             $client = self::getClient();
             $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/keys/'.
-                Auth::user()['company_id'].'/'.$entity_key.'/'.$description);
+                Auth::user()['company_id'].'/'.$entity_key.'/'.$description.
+                '?api_token=' . config('app.attributes_api_key'));
         
             return json_decode((string)$response->getBody());
         } catch (ValidatorException $e) {
@@ -139,7 +144,7 @@ class AttributeRepositoryEloquent
         try {
             $client = self::getClient();
             $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/values/'.
-               $entity_key.'/'.$entity_id);
+               $entity_key.'/'.$entity_id . '?api_token=' . config('app.attributes_api_key'));
         
             return json_decode((string)$response->getBody());
         } catch (ValidatorException $e) {
@@ -254,7 +259,7 @@ class AttributeRepositoryEloquent
 
             $client = self::getClient();
             $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/'.
-                $entity_key.'/'.$entity_id, [
+                $entity_key.'/'.$entity_id . '?api_token=' . config('app.attributes_api_key'), [
                     'multipart' => $inputs
                 ]);
         
