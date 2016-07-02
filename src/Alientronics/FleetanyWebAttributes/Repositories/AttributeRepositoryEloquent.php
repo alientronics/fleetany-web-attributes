@@ -150,12 +150,16 @@ class AttributeRepositoryEloquent
     
     public static function getAttributesWithValues($entity_key, $entity_id = null)
     {
+
+        if (config('app.attributes_api_url') == null) {
+            return [];
+        } 
+
         try {
+
             $attributes = self::getKeys($entity_key);
 
-            if (config('app.attributes_api_url') == 'SomeUrl') {
-                return [];
-            } elseif (empty($entity_id) && !empty($attributes)) {
+            if (empty($entity_id) && !empty($attributes)) {
                 foreach ($attributes as $key => $value) {
                     $attributes[$key] = self::setAttributesProperties($attributes[$key]);
                 }
