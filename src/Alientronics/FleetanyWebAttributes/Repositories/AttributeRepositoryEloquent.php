@@ -228,6 +228,11 @@ class AttributeRepositoryEloquent
     
     public static function setValues($inputs)
     {
+
+        if (config('app.attributes_api_url') == null) {
+            return [];
+        }
+        
         try {
             $entity_id = $inputs['entity_id'];
             $entity_key = $inputs['entity_key'];
@@ -247,7 +252,7 @@ class AttributeRepositoryEloquent
                 unset($inputs[$key]);
             }
 
-            $client = new Client();
+            $client = self::getClient();
             $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/'.
                 $entity_key.'/'.$entity_id, [
                     'multipart' => $inputs
