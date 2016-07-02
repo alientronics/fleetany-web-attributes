@@ -21,7 +21,7 @@ script:
   - ./vendor/bin/test-reporter
   - vendor/bin/phpcs --standard=psr2 src/Alientronics tests/
   - vendor/bin/phpcpd --verbose src/
-  - vendor/bin/phpmd src/ text codesize,unusedcode,naming,design
+  - vendor/bin/phpmd src/ text unusedcode,naming,design
   - vendor/bin/phploc src/
 
 notifications:

@@ -7,6 +7,20 @@
       "name": "Alientronics"
     }
   ],
+  "repositories": [
+      {
+          "type": "package",
+          "package": {
+              "version": "dev-master",
+              "name": "alientronics/laravel-acl",
+              "source": {
+                  "url": "https://github.com/alientronics/laravel-acl.git",
+                  "type": "git",
+                  "reference": "master"
+              }
+          }
+      }
+  ],
   "require": {
     "php": ">=5.4.0",
     "illuminate/support": "^5.2"
@@ -20,7 +34,8 @@
     "phploc/phploc": "*",
     "sebastian/phpcpd": "*",
     "phpmd/phpmd": "*",
-    "codeclimate/php-test-reporter": "dev-master"
+    "codeclimate/php-test-reporter": "dev-master",
+    "alientronics/laravel-acl": "dev-master"
   },
   "autoload": {
     "psr-4": {
@@ -28,6 +43,9 @@
     }
   },
   "autoload-dev": {
+    "classmap": [
+      "vendor/alientronics/laravel-acl/src/Kodeine/Acl/"
+    ],
     "psr-4": {
       "App\\": "vendor/laravel/laravel/app/",
       "Tests\\": "tests/"
@@ -36,9 +54,10 @@
     "scripts": {
         "post-install-cmd": [
             "php -r \"copy('src/routes.php', 'vendor/laravel/laravel/app/Http/routes.php');\"",
-            "php -r \"copy('tests/config-app.php', 'vendor/laravel/laravel/config/app.php');\"",
+            "php -r \"copy('helper/config-app.php', 'vendor/laravel/laravel/config/app.php');\"",
+            "php -r \"copy('helper/Kernel.php', 'vendor/laravel/laravel/app/Http/Kernel.php');\"",
             "mkdir -p vendor/laravel/laravel/resources/views/layouts/",
-            "php -r \"copy('tests/config-app.php', 'vendor/laravel/laravel/resources/views/layouts/default.blade.php');\""
+            "php -r \"copy('helper/config-app.php', 'vendor/laravel/laravel/resources/views/layouts/default.blade.php');\""
         ]
     },
   "minimum-stability": "dev"

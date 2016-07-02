@@ -2,13 +2,11 @@
 
 namespace Tests;
 
-use App\Entities\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use App\User;
 
 class AcceptanceTestCase extends BaseTestCase
 {
-    use DatabaseTransactions;
     
     /**
      * The base URL to use while testing the application.
@@ -32,4 +30,10 @@ class AcceptanceTestCase extends BaseTestCase
         return $app;
     }
     
+    public function setUp()
+    {
+        parent::setUp();
+        $user = new User(array('name' => 'Unit Tester'));
+        $this->be($user);
+    }
 }

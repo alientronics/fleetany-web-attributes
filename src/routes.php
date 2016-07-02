@@ -17,8 +17,8 @@ Route::group(
     'acl'],
     'can' => 'view.attribute'],
     function () {
-        Route::resource('attribute', 'AttributeController');
+        Route::resource('attribute', '\Alientronics\FleetanyWebAttributes\Controllers\AttributeController');
     }
 );
 
-Route::get('attribute/destroy/{id}', 'AttributeController@destroy');
+Route::get('attribute/destroy/{id}', '\Alientronics\FleetanyWebAttributes\Controllers\AttributeController@destroy');

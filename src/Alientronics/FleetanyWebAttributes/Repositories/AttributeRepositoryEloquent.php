@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Pagination\LengthAwarePaginator;
-use function GuzzleHttp\json_encode;
-use function GuzzleHttp\json_decode;
+use GuzzleHttp\json_decode;
 use GuzzleHttp\Psr7\UploadedFile;
 
 class AttributeRepositoryEloquent extends BaseRepository implements AttributeRepository
@@ -45,19 +44,19 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         $attributes = self::getKeys($filters['entity-key'], $filters['description']);
         
         $filters['page'] = 1;
-        $currentPageSearchResults = array_slice(
+        $curPageSearchResults = array_slice(
             $attributes,
             $filters['paginate'] * ($filters['page'] - 1),
             $filters['paginate']
         );
-        $paginatedSearchResults = new LengthAwarePaginator(
-            $currentPageSearchResults,
+        $pagSearchResults = new LengthAwarePaginator(
+            $curPageSearchResults,
             count($attributes),
             $filters['paginate'],
             $filters['page']
         );
 
-        return $paginatedSearchResults;
+        return $pagSearchResults;
     }
     
     public function hasReferences($idAttribute)
@@ -216,6 +215,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
         
         $returnOptions = [];
         foreach ($options as $key => $value) {
+            $key = $key;
             $returnOptions[$value] = $value;
         }
 
