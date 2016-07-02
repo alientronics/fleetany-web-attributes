@@ -40,6 +40,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'attributes_api_url' => env('ATTRIBUTES_API_URL', 'SomeUrl'),
 
     /*
     |--------------------------------------------------------------------------
