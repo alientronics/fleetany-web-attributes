@@ -153,10 +153,9 @@ class AttributeRepositoryEloquent
 
         if (config('app.attributes_api_url') == null) {
             return [];
-        } 
+        }
 
         try {
-
             $attributes = self::getKeys($entity_key);
 
             if (empty($entity_id) && !empty($attributes)) {
