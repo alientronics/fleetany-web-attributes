@@ -4,7 +4,7 @@ namespace Alientronics\FleetanyWebAttributes\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Repositories\AttributeRepository;
+use Alientronics\FleetanyWebAttributes\Repositories\AttributeRepository;
 use App\Entities\Key;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
@@ -13,13 +13,28 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use GuzzleHttp\json_decode;
 use GuzzleHttp\Psr7\UploadedFile;
 
-class AttributeRepositoryEloquent extends BaseRepository implements AttributeRepository
+class AttributeRepositoryEloquent
 {
+
+    private static $client;
 
     protected $rules = [
         'description'      => 'min:3|required',
         'entity_key' => 'min:3|required',
         ];
+
+    public static function setClient($client)
+    {
+        self::$client = $client;
+    }
+
+    public static function getClient()
+    {
+        if (self::$client == null) {
+            self::$client = new Client();
+        }
+        return self::$client;
+    }
 
     public function model()
     {
@@ -72,7 +87,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     
     public function getKey($idKey)
     {
-        $client = new Client();
+        $client = self::getClient();
         $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/key/' . $idKey);
         
         return json_decode((string)$response->getBody());
@@ -80,7 +95,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     
     public function updateKey($idKey, $inputs)
     {
-        $client = new Client();
+        $client = self::getClient();
         $response = $client->request('PUT', config('app.attributes_api_url').'/api/v1/key/' . $idKey, [
             'form_params' => $inputs
         ]);
@@ -95,7 +110,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     public function createKey($inputs)
     {
         
-        $client = new Client();
+        $client = self::getClient();
         $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/key', [
             'form_params' => $inputs
         ]);
@@ -109,7 +124,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     
     public function deleteKey($idKey)
     {
-        $client = new Client();
+        $client = self::getClient();
         $response = $client->request('DELETE', config('app.attributes_api_url').'/api/v1/key/' . $idKey);
         
         if ((string)$response->getBody() == '"deleted"') {
@@ -122,7 +137,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     public static function getKeys($entity_key, $description = '-')
     {
         try {
-            $client = new Client();
+            $client = self::getClient();
             $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/keys/'.
                 Auth::user()['company_id'].'/'.$entity_key.'/'.$description);
         
@@ -136,7 +151,7 @@ class AttributeRepositoryEloquent extends BaseRepository implements AttributeRep
     public static function getValues($entity_key, $entity_id)
     {
         try {
-            $client = new Client();
+            $client = self::getClient();
             $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/values/'.
                $entity_key.'/'.$entity_id);
         

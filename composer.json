@@ -23,7 +23,8 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/support": "^5.2"
+    "illuminate/support": "^5.2",
+    "guzzlehttp/guzzle": "^6.2"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
@@ -35,7 +36,9 @@
     "sebastian/phpcpd": "*",
     "phpmd/phpmd": "*",
     "codeclimate/php-test-reporter": "dev-master",
-    "alientronics/laravel-acl": "dev-master"
+    "alientronics/laravel-acl": "dev-master",
+    "prettus/l5-repository": "dev-master",
+    "mockery/mockery": "0.9.*"
   },
   "autoload": {
     "psr-4": {
