@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Alientronics\FleetanyWebAttributes\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\AttributeRepositoryEloquent;

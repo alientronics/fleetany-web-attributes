@@ -11,26 +11,20 @@
 |
 */
 
-$factory->define(App\User::class, function ($faker) {
-    return [
-        'name' => $faker->name,
-        'api_token' => $faker->name,
-    ];
-});
-
-$factory->define(App\Key::class, function ($faker) {
+$factory->define(Alientronics\FleetanyWebAttributes\Entities\Key::class, function ($faker) {
     return [
         'entity_key' => 'vehicle',
         'description' => 'Description',
         'type' => 'string',
+        'company_id' => 1,
     ];
 });
 
-$factory->define(App\Value::class, function ($faker) {
+$factory->define(Alientronics\FleetanyWebAttributes\Entities\Value::class, function ($faker) {
     return [
         'entity_key' => 'vehicle',
-        'entity_id' => 1,
-        'attribute_id' => 1,
+        'entity_id' => str_random(10),
+        'attribute_id' => str_random(10),
         'value' => 1,
     ];
 });

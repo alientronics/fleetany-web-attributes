@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace Alientronics\FleetanyWebAttributes\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;

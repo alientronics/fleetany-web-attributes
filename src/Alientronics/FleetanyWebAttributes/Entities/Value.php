@@ -1,4 +1,4 @@
-<?php namespace App\Entities;
+<?php namespace Alientronics\FleetanyWebAttributes\Entities;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,14 +19,7 @@ class Value extends BaseModel
 
     public function key()
     {
-        return $this->belongsTo(\App\Entities\Key::class, 'attribute_id', 'id');
+        return $this->belongsTo(\Alientronics\FleetanyWebAttributes\Entities\Key::class, 'attribute_id', 'id');
     }
     
-    public static function boot()
-    {
-        parent::boot();
-        Value::creating(function ($value) {
-            $value->company_id = ( $value->company_id ?: Auth::user()['company_id'] );
-        });
-    }
 }

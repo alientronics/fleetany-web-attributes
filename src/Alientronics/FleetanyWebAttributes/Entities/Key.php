@@ -1,4 +1,4 @@
-<?php namespace App\Entities;
+<?php namespace Alientronics\FleetanyWebAttributes\Entities;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,7 +19,7 @@ class Key extends BaseModel
 
     public function values()
     {
-        return $this->hasMany(\App\Entities\Value::class, 'attribute_id', 'id');
+        return $this->hasMany(\Alientronics\FleetanyWebAttributes\Entities\Value::class, 'attribute_id', 'id');
     }
     
     public static function boot()
