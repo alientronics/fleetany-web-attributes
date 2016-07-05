@@ -14,6 +14,7 @@ class AttributeController extends Controller
 {
 
     protected $attributeRepo;
+    protected $inputs;
     
     protected $fields = [
         'id',
@@ -27,6 +28,9 @@ class AttributeController extends Controller
 
         $this->middleware('auth');
         $this->attributeRepo = $attributeRepo;
+        
+        $this->inputs = $this->request->all();
+        $this->inputs['company_id'] = Auth::user()['company_id'];
     }
 
     public function index()
@@ -63,10 +67,7 @@ class AttributeController extends Controller
     public function store()
     {
         try {
-            $inputs = $this->request->all();
-            $inputs['company_id'] = Auth::user()['company_id'];
-            
-            $response = $this->attributeRepo->createKey($inputs);
+            $response = $this->attributeRepo->createKey($this->inputs);
             
             if ($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(
@@ -100,10 +101,7 @@ class AttributeController extends Controller
     public function update($idAttribute)
     {
         try {
-            $inputs = $this->request->all();
-            $inputs['company_id'] = Auth::user()['company_id'];
-            
-            $response = $this->attributeRepo->updateKey($idAttribute, $inputs);
+            $response = $this->attributeRepo->updateKey($idAttribute, $this->inputs);
             
             if ($response) {
                 return $this->redirect->to('attribute')->with('message', Lang::get(

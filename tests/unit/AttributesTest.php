@@ -10,18 +10,19 @@ use GuzzleHttp\Client;
 class AttributesTest extends UnitTestCase
 {
 
-    
-
-    public function testHasVehicle()
-    {
+    private function setGuzzleMock($return) {
         $mockClient = \Mockery::mock('\GuzzleHttp\Client');
         $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
         $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('');
+            ->andReturn($return);
         $mockClient->shouldReceive('request')->andReturn($response);
-    
-        AttributeRepositoryEloquent::setClient($mockClient);
+        
+        return $mockClient;
+    }
+
+    public function testHasVehicle()
+    {
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMock(''));
         $return = AttributeRepositoryEloquent::getAttributesWithValues(1);
     
         $this->assertEquals($return, []);
@@ -52,14 +53,8 @@ class AttributesTest extends UnitTestCase
         $object->type = 'checkbox';
         $returnMockClient[] = $object;
         
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->andReturn(json_encode($returnMockClient));
-        $mockClient->shouldReceive('request')->andReturn($response);
-        
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock(json_encode($returnMockClient)));
         $return = $attributeRepo->results($filters);
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $return);
@@ -70,15 +65,8 @@ class AttributesTest extends UnitTestCase
         $filters = [];
         $filters['paginate'] = 10;
         
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('');
-        $mockClient->shouldReceive('request')->andReturn($response);
-        
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock(''));
         $return = $attributeRepo->results($filters);
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $return);
@@ -102,16 +90,9 @@ class AttributesTest extends UnitTestCase
     
     public function testUpdateKeyFailed()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('""');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
         $inputs = ['description' => 'description', 'type' => 'string'];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock('""'));
         $return = $attributeRepo->updateKey(1, $inputs);
 
         $this->assertEquals($return, false);
@@ -119,16 +100,9 @@ class AttributesTest extends UnitTestCase
     
     public function testUpdateKeySuccess()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('"updated"');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
         $inputs = ['description' => 'description', 'type' => 'string'];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock('"updated"'));
         $return = $attributeRepo->updateKey(1, $inputs);
 
         $this->assertEquals($return, true);
@@ -136,16 +110,9 @@ class AttributesTest extends UnitTestCase
     
     public function testCreateKeyFailed()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('""');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
         $inputs = ['description' => 'description', 'type' => 'string'];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock('""'));
         $return = $attributeRepo->createKey($inputs);
 
         $this->assertEquals($return, false);
@@ -153,16 +120,9 @@ class AttributesTest extends UnitTestCase
     
     public function testCreateKeySuccess()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('"created"');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
         $inputs = ['description' => 'description', 'type' => 'string'];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock('"created"'));
         $return = $attributeRepo->createKey($inputs);
 
         $this->assertEquals($return, true);
@@ -170,16 +130,8 @@ class AttributesTest extends UnitTestCase
     
     public function testDeleteKeyFailed()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('""');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
-        $inputs = ['description' => 'description', 'type' => 'string'];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock('""'));
         $return = $attributeRepo->deleteKey(1);
 
         $this->assertEquals($return, false);
@@ -187,16 +139,8 @@ class AttributesTest extends UnitTestCase
     
     public function testDeleteKeySuccess()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('"deleted"');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
-        $inputs = ['description' => 'description', 'type' => 'string'];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($mockClient);
+        $attributeRepo->setClient($this->setGuzzleMock('"deleted"'));
         $return = $attributeRepo->deleteKey(1);
 
         $this->assertEquals($return, true);
@@ -204,14 +148,7 @@ class AttributesTest extends UnitTestCase
     
     public function testGetValues()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('[]');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
-        AttributeRepositoryEloquent::setClient($mockClient);
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMock('[]'));
         $return = AttributeRepositoryEloquent::getValues('vehicle', 1);
 
         $this->assertEquals($return, []);
@@ -219,19 +156,12 @@ class AttributesTest extends UnitTestCase
     
     public function testSetValues()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('"created"');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
         $inputs = [];
         $inputs['entity_key'] = 'vehicle';
         $inputs['entity_id'] = 1;
         $inputs['attribute1'] = [1];
         
-        AttributeRepositoryEloquent::setClient($mockClient);
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMock('"created"'));
         $return = AttributeRepositoryEloquent::setValues($inputs);
 
         $this->assertEquals($return, "created");
@@ -239,14 +169,7 @@ class AttributesTest extends UnitTestCase
     
     public function testGetAttributesWithValuesEmptyAttributes()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('');
-        $mockClient->shouldReceive('request')->andReturn($response);
-
-        AttributeRepositoryEloquent::setClient($mockClient);
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMock(''));
         $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
 
         $this->assertEquals($return, []);
@@ -278,13 +201,7 @@ class AttributesTest extends UnitTestCase
         $object->type = 'checkbox';
         $returnMockClient[] = $object;
         
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->andReturn(json_encode($returnMockClient));
-        $mockClient->shouldReceive('request')->andReturn($response);
-
-        AttributeRepositoryEloquent::setClient($mockClient);
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMock(json_encode($returnMockClient)));
         $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
 
         $this->assertEquals(count($return), 2);
@@ -326,13 +243,7 @@ class AttributesTest extends UnitTestCase
         $object->type = 'string';
         $returnMockClient[] = $object;
         
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->andReturn(json_encode($returnMockClient));
-        $mockClient->shouldReceive('request')->andReturn($response);
-
-        AttributeRepositoryEloquent::setClient($mockClient);
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMock(json_encode($returnMockClient)));
         $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle');
 
         $this->assertEquals(count($return), 3);
