@@ -45,11 +45,11 @@ class AttributeRepositoryEloquent
         $attributes = self::getKeys($filters['entity-key'], $filters['description']);
         
         $filters['page'] = 1;
-        $curPageSearchResults = array_slice(
+        $curPageSearchResults = is_array($attributes) ? array_slice(
             $attributes,
             $filters['paginate'] * ($filters['page'] - 1),
             $filters['paginate']
-        );
+        ) : [];
         $pagSearchResults = new LengthAwarePaginator(
             $curPageSearchResults,
             count($attributes),
