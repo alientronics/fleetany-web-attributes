@@ -303,7 +303,7 @@ class AttributesTest extends UnitTestCase
         $mockClient->shouldReceive('request')->andReturn($response);
 
         AttributeRepositoryEloquent::setClient($mockClient);
-        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
+        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle');
 
         $this->assertEquals(count($return), 3);
     }

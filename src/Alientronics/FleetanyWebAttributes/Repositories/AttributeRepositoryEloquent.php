@@ -26,7 +26,7 @@ class AttributeRepositoryEloquent
 
     public static function getClient()
     {
-        if (self::$client == null) {
+        if (empty(self::$client)) {
             self::$client = new Client();
         }
         return self::$client;
