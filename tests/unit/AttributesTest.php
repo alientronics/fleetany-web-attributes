@@ -6,6 +6,7 @@ use Tests\UnitTestCase;
 use Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent;
 use Illuminate\Pagination\LengthAwarePaginator;
 use GuzzleHttp\Client;
+use function GuzzleHttp\json_encode;
 
 class AttributesTest extends UnitTestCase
 {
@@ -42,23 +43,26 @@ class AttributesTest extends UnitTestCase
         $this->assertEquals($return, []);
     }
     
-    public function testGetClientWithEmptyClient()
-    {
-        $return = AttributeRepositoryEloquent::getClient();
-
-        $this->assertInstanceOf(Client::class, $return);
-    }
-    
     public function testResults()
     {
         $filters = [];
         $filters['paginate'] = 10;
         
+        $object = new \stdClass();
+        $object->id = 1;
+        $object->company_id = 1;
+        $object->entity_key = 'vehicle';
+        $object->description = 'description';
+        $object->type = 'select';
+        $object->options = 'first option,second option';
+        $returnMockClient[] = $object;
+        $returnMockClient[] = $object;
+        
         $mockClient = \Mockery::mock('\GuzzleHttp\Client');
         $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
         $response->shouldReceive('getBody')
             ->once()
-            ->andReturn('[]');
+            ->andReturn(json_encode($returnMockClient));
         $mockClient->shouldReceive('request')->andReturn($response);
         
         $attributeRepo = new AttributeRepositoryEloquent();
