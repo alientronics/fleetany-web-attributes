@@ -60,17 +60,6 @@ class AttributeRepositoryEloquent
         return $pagSearchResults;
     }
     
-    public function hasReferences($idAttribute)
-    {
-        $attribute = $this->find($idAttribute);
-        $countReferences = $attribute->values()->count();
-        
-        if ($countReferences > 0) {
-            return true;
-        }
-        return false;
-    }
-    
     public function getKey($key)
     {
         $client = self::getClient();
