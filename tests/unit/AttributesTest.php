@@ -254,6 +254,8 @@ class AttributesTest extends UnitTestCase
     
     public function testGetAttributesWithValuesWithAttributes()
     {
+        $returnMockClient = [];
+        
         $object = new \stdClass();
         $object->id = 1;
         $object->attribute_id = 1;
@@ -264,6 +266,15 @@ class AttributesTest extends UnitTestCase
         $object->type = 'select';
         $object->options = 'first option,second option';
         $returnMockClient[] = $object;
+        
+        $object = new \stdClass();
+        $object->id = 1;
+        $object->attribute_id = 1;
+        $object->value = 1;
+        $object->company_id = 1;
+        $object->entity_key = 'vehicle';
+        $object->description = 'description';
+        $object->options = 'first option,second option';
         $object->type = 'checkbox';
         $returnMockClient[] = $object;
         
@@ -281,6 +292,7 @@ class AttributesTest extends UnitTestCase
     
     public function testGetAttributesWithValuesWithoutEntityId()
     {
+        $returnMockClient = [];
         $object = new \stdClass();
         $object->id = 1;
         $object->attribute_id = 0;
@@ -291,8 +303,26 @@ class AttributesTest extends UnitTestCase
         $object->type = 'select';
         $object->options = '';
         $returnMockClient[] = $object;
+        
+        $object = new \stdClass();
+        $object->id = 1;
+        $object->attribute_id = 0;
+        $object->value = 1;
+        $object->company_id = 1;
+        $object->entity_key = 'vehicle';
+        $object->description = 'description';
+        $object->options = '';
         $object->type = 'checkbox';
         $returnMockClient[] = $object;
+        
+        $object = new \stdClass();
+        $object->id = 1;
+        $object->attribute_id = 0;
+        $object->value = 1;
+        $object->company_id = 1;
+        $object->entity_key = 'vehicle';
+        $object->description = 'description';
+        $object->options = '';
         $object->type = 'string';
         $returnMockClient[] = $object;
         
