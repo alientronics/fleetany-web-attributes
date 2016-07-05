@@ -6,7 +6,6 @@ use Tests\UnitTestCase;
 use Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent;
 use Illuminate\Pagination\LengthAwarePaginator;
 use GuzzleHttp\Client;
-use function GuzzleHttp\json_encode;
 
 class AttributesTest extends UnitTestCase
 {
@@ -28,19 +27,11 @@ class AttributesTest extends UnitTestCase
         $this->assertEquals($return, []);
     }
     
-    public function testGetAttributesWithValues()
+    public function testGetClientWithEmptyClient()
     {
-        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
-        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
-        $response->shouldReceive('getBody')
-            ->once()
-            ->andReturn('');
-        $mockClient->shouldReceive('request')->andReturn($response);
+        $return = AttributeRepositoryEloquent::getClient();
 
-        AttributeRepositoryEloquent::setClient($mockClient);
-        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
-
-        $this->assertEquals($return, []);
+        $this->assertInstanceOf(Client::class, $return);
     }
     
     public function testResults()
@@ -48,21 +39,11 @@ class AttributesTest extends UnitTestCase
         $filters = [];
         $filters['paginate'] = 10;
         
-        $object = new \stdClass();
-        $object->id = 1;
-        $object->company_id = 1;
-        $object->entity_key = 'vehicle';
-        $object->description = 'description';
-        $object->type = 'select';
-        $object->options = 'first option,second option';
-        $returnMockClient[] = $object;
-        $returnMockClient[] = $object;
-        
         $mockClient = \Mockery::mock('\GuzzleHttp\Client');
         $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
         $response->shouldReceive('getBody')
             ->once()
-            ->andReturn(json_encode($returnMockClient));
+            ->andReturn('');
         $mockClient->shouldReceive('request')->andReturn($response);
         
         $attributeRepo = new AttributeRepositoryEloquent();
@@ -223,5 +204,47 @@ class AttributesTest extends UnitTestCase
         $return = AttributeRepositoryEloquent::setValues($inputs);
 
         $this->assertEquals($return, "created");
+    }
+    
+    public function testGetAttributesWithValuesEmptyAttributes()
+    {
+        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
+        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn('');
+        $mockClient->shouldReceive('request')->andReturn($response);
+
+        AttributeRepositoryEloquent::setClient($mockClient);
+        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
+
+        $this->assertEquals($return, []);
+    }
+    
+    public function testGetAttributesWithValuesWithAttributes()
+    {
+        $object = new \stdClass();
+        $object->id = 1;
+        $object->attribute_id = 1;
+        $object->value = 1;
+        $object->company_id = 1;
+        $object->entity_key = 'vehicle';
+        $object->description = 'description';
+        $object->type = 'select';
+        $object->options = 'first option,second option';
+        $returnMockClient[] = $object;
+        $object->type = 'checkbox';
+        $returnMockClient[] = $object;
+        
+        $mockClient = \Mockery::mock('\GuzzleHttp\Client');
+        $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
+        $response->shouldReceive('getBody')
+            ->andReturn(json_encode($returnMockClient));
+        $mockClient->shouldReceive('request')->andReturn($response);
+
+        AttributeRepositoryEloquent::setClient($mockClient);
+        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
+
+        $this->assertEquals(count($return), 2);
     }
 }
