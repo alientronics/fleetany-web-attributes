@@ -10,7 +10,8 @@ use GuzzleHttp\Client;
 class AttributesTest extends UnitTestCase
 {
 
-    private function setGuzzleMock($return) {
+    private function setGuzzleMock($return)
+    {
         $mockClient = \Mockery::mock('\GuzzleHttp\Client');
         $response = \Mockery::mock('GuzzleHttp\ResponseInterface');
         $response->shouldReceive('getBody')
