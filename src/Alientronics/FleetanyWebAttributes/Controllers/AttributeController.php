@@ -3,8 +3,7 @@
 namespace Alientronics\FleetanyWebAttributes\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\AttributeRepositoryEloquent;
-use App\Entities\Key;
+use Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent;
 use Lang;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Support\Facades\Auth;
@@ -44,8 +43,19 @@ class AttributeController extends Controller
     
     public function create()
     {
-        $attribute = new Key();
-        $entity_key = ['vehicle' => 'vehicle'];
+        $attribute = (object)[
+                'id'=>'',
+                'entity_key'=>'',
+                'description'=>'',
+                'type'=>'',
+                'options'=>'',
+            ];
+
+        $entity_key = [ 'vehicle' => 'vehicle',
+                        'contacts'=>'contacts',
+                        'entry'=>'entry',
+                        'trip'=>'trip',
+                        ];
         
         foreach ($entity_key as $entity_key_value) {
             $entity_key_types = TypeRepositoryEloquent::getTypes($entity_key_value)->toArray();
