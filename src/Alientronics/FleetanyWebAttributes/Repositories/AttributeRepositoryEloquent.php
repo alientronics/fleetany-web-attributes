@@ -152,11 +152,15 @@ class AttributeRepositoryEloquent
         try {
             $attributes = self::getKeys($entity_key);
 
-            if (empty($entity_id) && !empty($attributes)) {
+            if (empty($attributes)) {
+                return [];
+            }
+
+            if (empty($entity_id)) {
                 foreach ($attributes as $key => $value) {
                     $attributes[$key] = self::setAttributesProperties($attributes[$key]);
                 }
-            } elseif (!empty($entity_id) && !empty($attributes)) {
+            } else {
                 $values = self::getValues($entity_key, $entity_id);
                 
                 $valuesIndexedByAttr = [];
@@ -175,11 +179,10 @@ class AttributeRepositoryEloquent
                         $valuesIndexedByAttr[$value->id]
                     );
                 }
-            } else {
-                return [];
             }
 
             return $attributes;
+
         } catch (ValidatorException $e) {
             return $this->redirect->back()->withInput()
                    ->with('errors', $e->getMessageBag());
