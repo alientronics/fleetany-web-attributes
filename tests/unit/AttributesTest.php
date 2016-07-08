@@ -24,7 +24,7 @@ class AttributesTest extends UnitTestCase
     public function testHasVehicle()
     {
         AttributeRepositoryEloquent::setClient($this->setGuzzleMock(''));
-        $return = AttributeRepositoryEloquent::getAttributesWithValues(1);
+        $return = AttributeRepositoryEloquent::getAttributes(1);
     
         $this->assertEquals($return, []);
     }
@@ -245,7 +245,7 @@ class AttributesTest extends UnitTestCase
         $returnMockClient[] = $object;
         
         AttributeRepositoryEloquent::setClient($this->setGuzzleMock(json_encode($returnMockClient)));
-        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle');
+        $return = AttributeRepositoryEloquent::getAttributes('vehicle');
 
         $this->assertEquals(count($return), 3);
     }

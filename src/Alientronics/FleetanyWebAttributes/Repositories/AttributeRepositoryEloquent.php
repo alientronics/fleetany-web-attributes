@@ -142,7 +142,31 @@ class AttributeRepositoryEloquent
         }
     }
     
-    public static function getAttributesWithValues($entity_key, $entity_id = null)
+    public static function getAttributes($entity_key)
+    {
+        if (config('app.attributes_api_url') == null) {
+            return [];
+        }
+
+        try {
+            $attributes = self::getKeys($entity_key);
+
+            if (empty($attributes)) {
+                return [];
+            }
+
+            foreach (array_keys($attributes) as $key) {
+                $attributes[$key] = self::setAttributesProperties($attributes[$key]);
+            }
+
+            return $attributes;
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
+        }
+    }
+
+    public static function getAttributesWithValues($entity_key, $entity_id)
     {
 
         if (config('app.attributes_api_url') == null) {
@@ -156,33 +180,27 @@ class AttributeRepositoryEloquent
                 return [];
             }
 
-            if (empty($entity_id)) {
-                foreach ($attributes as $key => $value) {
-                    $attributes[$key] = self::setAttributesProperties($attributes[$key]);
+
+            $values = self::getValues($entity_key, $entity_id);
+            
+            $valuesIndexedByAttr = [];
+            if (!empty($values)) {
+                foreach ($values as $value) {
+                    $valuesIndexedByAttr[$value->attribute_id] = $value->value;
                 }
-            } else {
-                $values = self::getValues($entity_key, $entity_id);
-                
-                $valuesIndexedByAttr = [];
-                if (!empty($values)) {
-                    foreach ($values as $value) {
-                        $valuesIndexedByAttr[$value->attribute_id] = $value->value;
-                    }
+            }
+            
+            foreach ($attributes as $key => $value) {
+                if (empty($valuesIndexedByAttr[$value->id])) {
+                    $valuesIndexedByAttr[$value->id] = [];
                 }
-                
-                foreach ($attributes as $key => $value) {
-                    if (empty($valuesIndexedByAttr[$value->id])) {
-                        $valuesIndexedByAttr[$value->id] = [];
-                    }
-                    $attributes[$key] = self::setAttributesProperties(
-                        $attributes[$key],
-                        $valuesIndexedByAttr[$value->id]
-                    );
-                }
+                $attributes[$key] = self::setAttributesProperties(
+                    $attributes[$key],
+                    $valuesIndexedByAttr[$value->id]
+                );
             }
 
             return $attributes;
-
         } catch (ValidatorException $e) {
             return $this->redirect->back()->withInput()
                    ->with('errors', $e->getMessageBag());
