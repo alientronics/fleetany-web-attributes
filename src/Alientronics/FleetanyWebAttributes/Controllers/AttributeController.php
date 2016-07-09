@@ -79,9 +79,11 @@ class AttributeController extends Controller
             $response = $this->attributeRepo->createKey($this->inputs);
             
             if ($response) {
+                //Fix Segmentation fault at phpunit --coverage-clover
+                $table = Lang::get('attributes.Attribute');
                 return $this->redirect->to('attribute')->with('message', Lang::get(
                     'general.succefullcreate',
-                    ['table'=> Lang::get('attributes.Attribute')]
+                    ['table'=> $table]
                 ));
             } else {
                 return $this->redirect->back();
@@ -113,9 +115,11 @@ class AttributeController extends Controller
             $response = $this->attributeRepo->updateKey($idAttribute, $this->inputs);
             
             if ($response) {
+                //Fix Segmentation fault at phpunit --coverage-clover
+                $table = Lang::get('attributes.Attribute');
                 return $this->redirect->to('attribute')->with('message', Lang::get(
                     'general.succefullupdate',
-                    ['table'=> Lang::get('attributes.Attribute')]
+                    ['table'=> $table]
                 ));
             } else {
                 return $this->redirect->back();

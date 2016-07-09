@@ -32,7 +32,6 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->get('/attribute/1/edit')->see('entity key');
     }
 
-
     public function testUpdateTrue()
     {
         $this->setEloquentMock('updateKey', true);
