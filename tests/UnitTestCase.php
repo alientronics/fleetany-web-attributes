@@ -26,6 +26,8 @@ class UnitTestCase extends BaseTestCase
 
         $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
+        $app['config']['app.attributes_api_url'] = 'SomeUrl';
+
         return $app;
     }
 }

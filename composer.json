@@ -57,10 +57,13 @@
     "scripts": {
         "post-install-cmd": [
             "php -r \"copy('src/routes.php', 'vendor/laravel/laravel/app/Http/routes.php');\"",
-            "php -r \"copy('helper/config-app.php', 'vendor/laravel/laravel/config/app.php');\"",
-            "php -r \"copy('helper/Kernel.php', 'vendor/laravel/laravel/app/Http/Kernel.php');\"",
-            "mkdir -p vendor/laravel/laravel/resources/views/layouts/",
-            "php -r \"copy('helper/config-app.php', 'vendor/laravel/laravel/resources/views/layouts/default.blade.php');\""
+            "php -r \"copy('helper/Controller.php', 'vendor/laravel/laravel/app/Http/Controllers/Controller.php');\"",
+            "mkdir -p vendor/laravel/laravel/resources/views/attribute/",
+            "php -r \"copy('helper/view.blade.php', 'vendor/laravel/laravel/resources/views/attribute/edit.blade.php');\"",
+            "php -r \"copy('helper/view.blade.php', 'vendor/laravel/laravel/resources/views/attribute/index.blade.php');\"",
+            "mkdir -p vendor/laravel/laravel/app/Repositories/",
+            "php -r \"copy('helper/TypeRepositoryEloquent.php', 'vendor/laravel/laravel/app/Repositories/TypeRepositoryEloquent.php');\"",
+            "php -r \"copy('helper/MockObject.php', 'vendor/laravel/laravel/app/Repositories/MockObject.php');\""
         ]
     },
   "minimum-stability": "dev"

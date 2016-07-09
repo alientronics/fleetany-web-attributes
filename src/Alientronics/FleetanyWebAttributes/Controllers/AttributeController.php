@@ -25,7 +25,6 @@ class AttributeController extends Controller
     {
         parent::__construct();
 
-        $this->middleware('auth');
         $this->attributeRepo = $attributeRepo;
         
         $this->inputs = $this->request->all();

@@ -7,7 +7,7 @@ use Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent;
 use Illuminate\Pagination\LengthAwarePaginator;
 use GuzzleHttp\Client;
 
-class AttributesTest extends UnitTestCase
+class AttributeRepositoryEloquentTest extends UnitTestCase
 {
 
     private function setGuzzleMock($return)
