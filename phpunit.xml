@@ -16,11 +16,8 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/</directory>
-            <exclude>
-                <directory suffix=".php">src/views/</directory>
-                <directory suffix=".php">src/translations/</directory>
-            </exclude>
+            <directory suffix=".php">src/Alientronics/FleetanyWebAttributes/Controllers/</directory>
+            <directory suffix=".php">src/Alientronics/FleetanyWebAttributes/Repositories/</directory>
         </whitelist>
     </filter>
 </phpunit>

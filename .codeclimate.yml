@@ -16,7 +16,6 @@ engines:
       - php
 ratings:
    paths:
-   - src/**
+   - src/Alientronics/FleetanyWebAttributes/Controllers/**
+   - src/Alientronics/FleetanyWebAttributes/Repositories/**
    - "**.php"
-exclude_paths:
-- "src/views/*"
