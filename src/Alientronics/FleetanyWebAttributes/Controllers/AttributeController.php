@@ -21,6 +21,21 @@ class AttributeController extends Controller
         'description'
     ];
     
+    protected $entity_key = [
+        'vehicle' => 'vehicle',
+        'contact'=>'contact',
+        'entry'=>'entry',
+        'trip'=>'trip',
+    ];
+
+    protected $type = [
+        'string' => 'string',
+        'numeric' => 'numeric',
+        'select' => 'select',
+        'checkbox' => 'checkbox',
+        'file' => 'file'
+    ];
+
     public function __construct(AttributeRepositoryEloquent $attributeRepo)
     {
         parent::__construct();
@@ -49,14 +64,9 @@ class AttributeController extends Controller
                 'type'=>'',
                 'options'=>'',
             ];
-
-        $entity_key = [ 'vehicle' => 'vehicle',
-                        'contacts'=>'contacts',
-                        'entry'=>'entry',
-                        'trip'=>'trip',
-                        ];
         
-        foreach ($entity_key as $entity_key_value) {
+        $entity_key = $this->entity_key;
+        foreach ($this->entity_key as $entity_key_value) {
             $entity_key_types = TypeRepositoryEloquent::getTypes($entity_key_value)->toArray();
             if (!empty($entity_key_types)) {
                 foreach ($entity_key_types as $entity_key_type) {
@@ -68,8 +78,8 @@ class AttributeController extends Controller
         
         asort($entity_key);
         
-        $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select',
-                    'checkbox' => 'checkbox', 'file' => 'file'];
+        $type = $this->type;
+
         return view("attribute.edit", compact('attribute', 'entity_key', 'type'));
     }
 
@@ -98,9 +108,8 @@ class AttributeController extends Controller
     {
         try {
             $attribute = $this->attributeRepo->getKey($idAttribute);
-            $entity_key = ['vehicle' => 'vehicle'];
-            $type = ['string' => 'string', 'numeric' => 'numeric', 'select' => 'select',
-                'checkbox' => 'checkbox', 'file' => 'file'];
+            $entity_key = $this->entity_key;
+            $type = $this->type;
             
             return view("attribute.edit", compact('attribute', 'entity_key', 'type'));
         } catch (ValidatorException $e) {
