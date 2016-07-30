@@ -22,3 +22,4 @@ Route::group(
 );
 
 Route::get('attribute/destroy/{id}', '\Alientronics\FleetanyWebAttributes\Controllers\AttributeController@destroy');
+Route::get('attribute/download/{file}', '\Alientronics\FleetanyWebAttributes\Controllers\AttributeController@download');

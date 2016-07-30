@@ -8,6 +8,9 @@ use Lang;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\TypeRepositoryEloquent;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Routing\Route;
+use Illuminate\Http\Response;
 
 class AttributeController extends Controller
 {
@@ -148,6 +151,22 @@ class AttributeController extends Controller
                 return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregister"));
             } else {
                 return $this->redirect->to('attribute')->with('message', Lang::get("general.deletedregistererror"));
+            }
+        } catch (ValidatorException $e) {
+            return $this->redirect->back()->withInput()
+                   ->with('errors', $e->getMessageBag());
+        }
+    }
+
+    public function download(Route $route)
+    {
+        try {
+            $file = $this->attributeRepo->download($route->getParameter('file'));
+            if (!empty($file->file) && !empty($file->mimetype)) {
+                header("Content-Disposition: attachment; filename=\"{$file->name}\"");
+                return (new Response($file->file, 200))->header('Content-Type', $file->mimetype);
+            } else {
+                return (new Response("", 404));
             }
         } catch (ValidatorException $e) {
             return $this->redirect->back()->withInput()

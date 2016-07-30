@@ -279,4 +279,18 @@ class AttributeRepositoryEloquent
                    ->with('errors', $e->getMessageBag());
         }
     }
+    
+    public function download($fileNameEncoded)
+    {
+        $client = new Client();
+        $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/download', [
+                'form_params' => [$fileNameEncoded]
+            ]);
+     
+        if (!empty((string)$response->getBody())) {
+            return json_decode((string)$response->getBody());
+        } else {
+            return null;
+        }
+    }
 }

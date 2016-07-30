@@ -31,7 +31,10 @@
 			</div>
 		@elseif($attribute->type == 'file')
 			<div class="mdl-textfield mdl-js-textfield is-upgraded is-focused mdl-textfield--floating-label @if ($errors->has('attribute'.$attribute->id)) is-invalid is-dirty @endif"">
-                {!!Form::file('attribute'.$attribute->id, $attribute->value, ['id' => 'attribute'.$attribute->id, 'class' => 'mdl-textfield__input'])!!}
+            	@if(!empty($attribute->value))
+            	<a href="{{url('/')}}/attribute/download/{{urlencode(base64_encode($attribute->value))}}">{{$attribute->value}}</a><br/><br/>
+            	@endif
+                {!!Form::file('attribute'.$attribute->id, "", ['id' => 'attribute'.$attribute->id, 'class' => 'mdl-textfield__input'])!!}
             	{!!Form::label('attribute'.$attribute->id, $attribute->description, ['class' => 'mdl-color-text--primary-contrast mdl-textfield__label is-dirty'])!!}
             	<span class="mdl-textfield__error">{{ $errors->first('attribute'.$attribute->id) }}</span>
             </div>
