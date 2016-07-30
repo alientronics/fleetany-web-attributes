@@ -252,8 +252,9 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
     
     public function testDownloadFailed()
     {
+        $returnMockClient = [];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($this->setGuzzleMock(null));
+        $attributeRepo->setClient($this->setGuzzleMock(''));
         $return = $attributeRepo->download('dGVzdGUudHh0');
 
         $this->assertEquals($return, null);
