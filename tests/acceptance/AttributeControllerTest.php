@@ -83,14 +83,14 @@ class AttributeControllerTest extends AcceptanceTestCase
         $object->mimetype = 'mimetype';
         
         $this->setEloquentMock('download', $object);
-        $this->get('/attribute/download');
+        $this->get('/attribute/download/dGVzdGUudHh0');
         $this->assertEquals($this->response->status(), 200);
     }
 
     public function testDownloadFailed()
     {
         $this->setEloquentMock('download', null);
-        $this->get('/attribute/download');
+        $this->get('/attribute/download/dGVzdGUudHh0');
         $this->assertEquals($this->response->status(), 404);
     }
 }
