@@ -249,4 +249,28 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
 
         $this->assertEquals(count($return), 3);
     }
+    
+    public function testDownloadSuccess()
+    {
+        $object = new \stdClass();
+        $object->name = 'name';
+        $object->file = 'file';
+        $object->mimetype = 'mimetype';
+        $returnMockClient[] = $object;
+        
+        $attributeRepo = new AttributeRepositoryEloquent();
+        $attributeRepo->setClient($this->setGuzzleMock(json_encode($returnMockClient)));
+        $return = $attributeRepo->download('dGVzdGUudHh0');
+
+        $this->assertInstanceOf(is_object($return), true);
+    }
+    
+    public function testDownloadFailed()
+    {
+        $attributeRepo = new AttributeRepositoryEloquent();
+        $attributeRepo->setClient($this->setGuzzleMock(json_encode(null)));
+        $return = $attributeRepo->download('dGVzdGUudHh0');
+
+        $this->assertEquals($return, null);
+    }
 }

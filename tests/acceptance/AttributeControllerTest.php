@@ -73,4 +73,24 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->setEloquentMock('deleteKey', true);
         $this->get('/attribute/destroy/1')->assertRedirectedTo('attribute');
     }
+
+    public function testDownloadSuccess()
+    {
+
+        $object = new \stdClass();
+        $object->name = 'name';
+        $object->file = 'file';
+        $object->mimetype = 'mimetype';
+        
+        $this->setEloquentMock('download', $object);
+        $this->get('/attribute/download');
+        $this->assertEquals($this->response->status(), 200);
+    }
+
+    public function testDownloadFailed()
+    {
+        $this->setEloquentMock('download', null);
+        $this->get('/attribute/download');
+        $this->assertEquals($this->response->status(), 404);
+    }
 }
