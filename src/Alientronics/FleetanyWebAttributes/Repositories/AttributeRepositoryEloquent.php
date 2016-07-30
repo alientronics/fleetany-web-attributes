@@ -8,6 +8,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use GuzzleHttp\json_decode;
 use GuzzleHttp\Psr7\UploadedFile;
+use Illuminate\Support\Facades\Input;
 
 class AttributeRepositoryEloquent
 {
@@ -254,14 +255,21 @@ class AttributeRepositoryEloquent
             
             foreach ($inputs as $key => $value) {
                 if (substr($key, 0, 9) == "attribute") {
+                    $filename = "";
                     if (is_object($value) && get_class($value) == "Illuminate\\Http\\UploadedFile") {
+                        $filename = Input::file($key)->getClientOriginalName();
+                        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                        $filename = substr($filename, 0, -strlen($extension) - 1) .
+                                        date("-YmdHis.") . $extension;
                         $value = fopen($value, 'r');
                     } elseif (is_array($value)) {
                         $value = json_encode($value);
+                        $filename = "";
                     }
                     
                     $inputs[] = ["name" => substr($key, 9),
                                 "contents" => $value,
+                                "filename" => $filename,
                     ];
                 }
                 unset($inputs[$key]);
@@ -272,7 +280,7 @@ class AttributeRepositoryEloquent
                 $entity_key.'/'.$entity_id . '?api_token=' . config('app.attributes_api_key'), [
                     'multipart' => $inputs
                 ]);
-        
+
             return json_decode((string)$response->getBody());
         } catch (ValidatorException $e) {
             return $this->redirect->back()->withInput()
