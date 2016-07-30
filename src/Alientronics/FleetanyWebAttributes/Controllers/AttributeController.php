@@ -164,12 +164,15 @@ class AttributeController extends Controller
             $file = $this->attributeRepo->download($route->getParameter('file'));
             $content = "";
             while (!$file->eof()) {
-              $content .= $file->read(1024);
+                $content .= $file->read(1024);
             }
             if (!empty($content)) {
                 $fileName = urldecode(base64_decode($route->getParameter('file')));
-                header("Content-Disposition: attachment; filename=\"{$fileName}\"");
-                return (new Response($content, 200));
+                $headers = [
+                    //'Content-Type' => 'application/octet-stream',
+                    'Content-Disposition: attachment; filename=' => $fileName
+                ];
+                return (new Response($content, 200, $headers));
             } else {
                 return (new Response("", 404));
             }

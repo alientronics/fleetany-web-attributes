@@ -77,19 +77,21 @@ class AttributeControllerTest extends AcceptanceTestCase
     public function testDownloadSuccess()
     {
 
-        $object = new \stdClass();
-        $object->name = 'name';
-        $object->file = 'file';
-        $object->mimetype = 'mimetype';
+        $mockStream = \Mockery::mock('GuzzleHttp\Psr7\Stream')->makePartial();
+        $mockStream->shouldReceive('eof')->twice()->andReturn(false, true);
+        $mockStream->shouldReceive('read')->once()->andReturn("content");
         
-        $this->setEloquentMock('download', $object);
+        $this->setEloquentMock('download', $mockStream);
         $this->get('/attribute/download/dGVzdGUudHh0');
         $this->assertEquals($this->response->status(), 200);
     }
 
     public function testDownloadFailed()
     {
-        $this->setEloquentMock('download', null);
+        $mockStream = \Mockery::mock('GuzzleHttp\Psr7\Stream')->makePartial();
+        $mockStream->shouldReceive('eof')->once()->andReturn(true);
+        
+        $this->setEloquentMock('download', $mockStream);
         $this->get('/attribute/download/dGVzdGUudHh0');
         $this->assertEquals($this->response->status(), 404);
     }
