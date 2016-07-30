@@ -291,7 +291,8 @@ class AttributeRepositoryEloquent
     public function download($fileNameEncoded)
     {
         $client = new Client();
-        $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/download', [
+        $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/download'.
+            '?api_token=' . config('app.attributes_api_key'), [
                 'form_params' => [$fileNameEncoded]
             ]);
      
