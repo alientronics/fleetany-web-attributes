@@ -291,15 +291,10 @@ class AttributeRepositoryEloquent
     public function download($fileNameEncoded)
     {
         $client = new Client();
-        $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/download'.
-            '?api_token=' . config('app.attributes_api_key'), [
-                'form_params' => [$fileNameEncoded]
-            ]);
-     
-        if (!empty((string)$response->getBody())) {
-            return json_decode((string)$response->getBody());
-        } else {
-            return null;
-        }
+        $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/values/download'.
+            '?api_token=' . config('app.attributes_api_key').
+            '&file=' . $fileNameEncoded, ['stream' => true]);
+
+        return $response->getBody();
     }
 }

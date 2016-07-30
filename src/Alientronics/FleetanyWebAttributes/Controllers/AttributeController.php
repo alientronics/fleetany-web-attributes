@@ -162,9 +162,14 @@ class AttributeController extends Controller
     {
         try {
             $file = $this->attributeRepo->download($route->getParameter('file'));
-            if (!empty($file->file) && !empty($file->mimetype)) {
-                header("Content-Disposition: attachment; filename=\"{$file->name}\"");
-                return (new Response($file->file, 200))->header('Content-Type', $file->mimetype);
+            $content = "";
+            while (!$file->eof()) {
+              $content .= $file->read(1024);
+            }
+            if (!empty($content)) {
+                $fileName = urldecode(base64_decode($route->getParameter('file')));
+                header("Content-Disposition: attachment; filename=\"{$fileName}\"");
+                return (new Response($content, 200));
             } else {
                 return (new Response("", 404));
             }
