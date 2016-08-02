@@ -293,7 +293,8 @@ class AttributeRepositoryEloquent
         $client = new Client();
         $response = $client->request('GET', config('app.attributes_api_url').'/api/v1/values/download'.
             '?api_token=' . config('app.attributes_api_key').
-            '&file=' . $fileNameEncoded, ['stream' => true]);
+            '&file=' . $fileNameEncoded.
+            '&company_id=' . Auth::user()['company_id'], ['stream' => true]);
 
         return $response->getBody();
     }
