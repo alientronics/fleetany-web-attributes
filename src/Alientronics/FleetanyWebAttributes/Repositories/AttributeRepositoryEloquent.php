@@ -277,9 +277,10 @@ class AttributeRepositoryEloquent
 
             $client = self::getClient();
             $response = $client->request('POST', config('app.attributes_api_url').'/api/v1/values/'.
-                $entity_key.'/'.$entity_id.'/'.Auth::user()['company_id'] . '?api_token=' . config('app.attributes_api_key'), [
+                $entity_key.'/'.$entity_id.'/'.Auth::user()['company_id'] .
+                    '?api_token=' . config('app.attributes_api_key'), [
                     'multipart' => $inputs
-                ]);
+                    ]);
 
             return json_decode((string)$response->getBody());
         } catch (ValidatorException $e) {
