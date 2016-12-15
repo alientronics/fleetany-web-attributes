@@ -31,14 +31,14 @@
     "phpunit/phpunit": "~4.0",
     "laravel/framework": "5.2.*",
     "laravel/laravel": "*",
-    "squizlabs/php_codesniffer": "^2.3",
+    "squizlabs/php_codesniffer": "*",
     "phploc/phploc": "*",
     "sebastian/phpcpd": "*",
     "phpmd/phpmd": "*",
     "codeclimate/php-test-reporter": "dev-master",
     "alientronics/laravel-acl": "dev-master",
     "prettus/l5-repository": "dev-master",
-    "mockery/mockery": "0.9.*"
+    "mockery/mockery": "*"
   },
   "autoload": {
     "psr-4": {
