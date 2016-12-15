@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "168b831b9e2933896196d6b9d4b52c1b",
-    "content-hash": "7e7d564a284e57a2aaf11456abc68d83",
+    "hash": "2aec3afcdeb125260dfa517c2d6740fa",
+    "content-hash": "adf4ecf5aa4ea153b591998493589d9e",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -2024,17 +2024,6 @@
         }
     ],
     "packages-dev": [
-        {
-            "name": "alientronics/laravel-acl",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/alientronics/laravel-acl.git",
-                "reference": "master"
-            },
-            "type": "library",
-            "time": "2016-05-03 04:16:17"
-        },
         {
             "name": "codeclimate/php-test-reporter",
             "version": "dev-master",
@@ -4416,7 +4405,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "codeclimate/php-test-reporter": 20,
-        "alientronics/laravel-acl": 20,
         "prettus/l5-repository": 20
     },
     "prefer-stable": false,

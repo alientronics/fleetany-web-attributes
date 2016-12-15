@@ -7,20 +7,6 @@
       "name": "Alientronics"
     }
   ],
-  "repositories": [
-      {
-          "type": "package",
-          "package": {
-              "version": "dev-master",
-              "name": "alientronics/laravel-acl",
-              "source": {
-                  "url": "https://github.com/alientronics/laravel-acl.git",
-                  "type": "git",
-                  "reference": "master"
-              }
-          }
-      }
-  ],
   "require": {
     "php": ">=5.4.0",
     "illuminate/support": "^5.2",
@@ -36,7 +22,6 @@
     "sebastian/phpcpd": "*",
     "phpmd/phpmd": "*",
     "codeclimate/php-test-reporter": "dev-master",
-    "alientronics/laravel-acl": "dev-master",
     "prettus/l5-repository": "dev-master",
     "mockery/mockery": "*"
   },
@@ -46,9 +31,6 @@
     }
   },
   "autoload-dev": {
-    "classmap": [
-      "vendor/alientronics/laravel-acl/src/Kodeine/Acl/"
-    ],
     "psr-4": {
       "App\\": "vendor/laravel/laravel/app/",
       "Tests\\": "tests/"
