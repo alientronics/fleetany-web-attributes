@@ -23,7 +23,7 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         return $mockClient;
     }
 
-    private function setGuzzleMockException($return)
+    private function setGuzzleMockException()
     {
         $messageBag = new MessageBag();
         $mockClient = \Mockery::mock('\GuzzleHttp\Client');
