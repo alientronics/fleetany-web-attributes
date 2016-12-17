@@ -3,6 +3,8 @@
 namespace Tests;
 
 use Tests\AcceptanceTestCase;
+use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Support\MessageBag;
 
 class AttributeControllerTest extends AcceptanceTestCase
 {
@@ -15,6 +17,15 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->app->instance('Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent', $mockRepo);
     }
 
+    private function setEloquentMockException($method, $return)
+    {
+        $messageBag = new MessageBag();
+        $mockRepo = \Mockery::mock('Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent');
+        $mockRepo->shouldReceive($method)->andThrow(new ValidatorException($messageBag));
+
+        $this->app->instance('Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent', $mockRepo);
+    }
+    
     public function testIndex()
     {
         $this->setEloquentMock('results', 'entity attributes');
@@ -56,6 +67,12 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->post('/attribute')->assertRedirectedTo('/');
     }
 
+    public function testStoreException()
+    {
+        $this->setEloquentMockException('createKey');
+        $this->post('/attribute')->assertRedirectedTo('/');
+    }
+    
     public function testDestroyTrue()
     {
         $this->setEloquentMock('deleteKey', true);
