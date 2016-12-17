@@ -43,6 +43,12 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->get('/attribute/1/edit')->see('entity key');
     }
 
+    public function testEditException()
+    {
+        $this->setEloquentMockException('getKey');
+        $this->get('/attribute/1/edit')->see('entity key');
+    }
+
     public function testUpdateTrue()
     {
         $this->setEloquentMock('updateKey', true);
@@ -52,6 +58,12 @@ class AttributeControllerTest extends AcceptanceTestCase
     public function testUpdateFalse()
     {
         $this->setEloquentMock('updateKey', false);
+        $this->put('/attribute/1')->assertRedirectedTo('/');
+    }
+
+    public function testUpdateFalseException()
+    {
+        $this->setEloquentMockException('updateKey');
         $this->put('/attribute/1')->assertRedirectedTo('/');
     }
 
@@ -85,6 +97,12 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->delete('/attribute/1')->assertRedirectedTo('attribute', ['message'=>'general.deletedregistererror']);
     }
 
+    public function testDestroyFalseException()
+    {
+        $this->setEloquentMockException('deleteKey');
+        $this->delete('/attribute/1')->assertRedirectedTo('attribute', ['message'=>'general.deletedregistererror']);
+    }
+
     public function testDestroy()
     {
         $this->setEloquentMock('deleteKey', true);
@@ -109,6 +127,16 @@ class AttributeControllerTest extends AcceptanceTestCase
         $mockStream->shouldReceive('eof')->once()->andReturn(true);
         
         $this->setEloquentMock('download', $mockStream);
+        $this->get('/attribute/download/dGVzdGUudHh0');
+        $this->assertEquals($this->response->status(), 404);
+    }
+
+    public function testDownloadFailedException()
+    {
+        $mockStream = \Mockery::mock('GuzzleHttp\Psr7\Stream')->makePartial();
+        $mockStream->shouldReceive('eof')->once()->andReturn(true);
+        
+        $this->setEloquentMockException('download');
         $this->get('/attribute/download/dGVzdGUudHh0');
         $this->assertEquals($this->response->status(), 404);
     }
