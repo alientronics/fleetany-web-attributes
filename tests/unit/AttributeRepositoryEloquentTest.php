@@ -21,6 +21,15 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         return $mockClient;
     }
 
+    private function setEloquentMockException($method)
+    {
+        $messageBag = new MessageBag();
+        $mockRepo = \Mockery::mock('Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent');
+        $mockRepo->shouldReceive($method)->andThrow(new ValidatorException($messageBag));
+
+        $this->app->instance('Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent', $mockRepo);
+    }
+
     public function testHasVehicle()
     {
         AttributeRepositoryEloquent::setClient($this->setGuzzleMock(''));
@@ -174,6 +183,15 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
 
         $this->assertEquals($return, []);
+    }
+    
+    public function testGetAttributesWithValuesException()
+    {
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMock(''));
+        $this->setEloquentMockException('getAttributesWithValues');
+        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
+
+        $this->assertRedirectedTo('/');
     }
     
     public function testGetAttributesWithValuesWithAttributes()
