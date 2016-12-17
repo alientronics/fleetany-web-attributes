@@ -169,6 +169,14 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         $this->assertEquals($return, []);
     }
     
+    public function testGetValuesException()
+    {
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
+        $return = AttributeRepositoryEloquent::getValues('vehicle', 1);
+
+        $this->assertRedirectedTo('/');
+    }
+    
     public function testSetValues()
     {
         $inputs = [];
@@ -180,6 +188,19 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         $return = AttributeRepositoryEloquent::setValues($inputs);
 
         $this->assertEquals($return, "created");
+    }
+    
+    public function testSetValuesException()
+    {
+        $inputs = [];
+        $inputs['entity_key'] = 'vehicle';
+        $inputs['entity_id'] = 1;
+        $inputs['attribute1'] = [1];
+        
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
+        $return = AttributeRepositoryEloquent::setValues($inputs);
+
+        $this->setExpectedException('ValidatorException');
     }
     
     public function testGetAttributesWithValuesEmptyAttributes()
@@ -270,6 +291,22 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         $return = AttributeRepositoryEloquent::getAttributes('vehicle');
 
         $this->assertEquals(count($return), 3);
+    }
+
+    public function testGetKeysException()
+    {
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
+        $return = AttributeRepositoryEloquent::getKeys('vehicle');
+    
+        $this->assertRedirectedTo('/');
+    }
+    
+    public function testGetAttributesException()
+    {
+        AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
+        $return = AttributeRepositoryEloquent::getAttributes('vehicle');
+
+        $this->assertRedirectedTo('/');
     }
     
 //     public function testDownloadFailed()
