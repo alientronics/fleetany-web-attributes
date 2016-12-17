@@ -17,7 +17,7 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->app->instance('Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent', $mockRepo);
     }
 
-    private function setEloquentMockException($method, $return)
+    private function setEloquentMockException($method)
     {
         $messageBag = new MessageBag();
         $mockRepo = \Mockery::mock('Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent');
