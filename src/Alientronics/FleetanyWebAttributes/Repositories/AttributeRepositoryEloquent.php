@@ -124,8 +124,7 @@ class AttributeRepositoryEloquent
         
             return json_decode((string)$response->getBody());
         } catch (ValidatorException $e) {
-            return $this->redirect->back()->withInput()
-                   ->with('errors', $e->getMessageBag());
+            throw $e;
         }
     }
     
@@ -138,8 +137,7 @@ class AttributeRepositoryEloquent
         
             return json_decode((string)$response->getBody());
         } catch (ValidatorException $e) {
-            return $this->redirect->back()->withInput()
-                   ->with('errors', $e->getMessageBag());
+            throw $e;
         }
     }
     
@@ -162,8 +160,7 @@ class AttributeRepositoryEloquent
 
             return $attributes;
         } catch (ValidatorException $e) {
-            return $this->redirect->back()->withInput()
-                   ->with('errors', $e->getMessageBag());
+            throw $e;
         }
     }
 
@@ -203,8 +200,7 @@ class AttributeRepositoryEloquent
 
             return $attributes;
         } catch (ValidatorException $e) {
-            return $this->redirect->back()->withInput()
-                   ->with('errors', $e->getMessageBag());
+            throw $e;
         }
     }
     
@@ -284,8 +280,7 @@ class AttributeRepositoryEloquent
 
             return json_decode((string)$response->getBody());
         } catch (ValidatorException $e) {
-            return $this->redirect->back()->withInput()
-                   ->with('errors', $e->getMessageBag());
+            throw $e;
         }
     }
     
