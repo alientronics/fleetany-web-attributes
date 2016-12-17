@@ -6,6 +6,8 @@ use Tests\UnitTestCase;
 use Alientronics\FleetanyWebAttributes\Repositories\AttributeRepositoryEloquent;
 use Illuminate\Pagination\LengthAwarePaginator;
 use GuzzleHttp\Client;
+use Illuminate\Support\MessageBag;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class AttributeRepositoryEloquentTest extends UnitTestCase
 {
