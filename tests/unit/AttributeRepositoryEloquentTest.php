@@ -189,8 +189,7 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
     
     public function testGetAttributesWithValuesException()
     {
-        AttributeRepositoryEloquent::setClient($this->setGuzzleMock(''));
-        $this->setEloquentMockException('getAttributesWithValues');
+        $this->setEloquentMockException('getValues');
         $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
 
         $this->assertRedirectedTo('/');
