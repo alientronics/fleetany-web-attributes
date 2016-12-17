@@ -46,7 +46,7 @@ class AttributeControllerTest extends AcceptanceTestCase
     public function testEditException()
     {
         $this->setEloquentMockException('getKey');
-        $this->get('/attribute/1/edit')->assertRedirectedTo('/');;
+        $this->get('/attribute/1/edit')->assertRedirectedTo('/');
     }
 
     public function testUpdateTrue()
@@ -133,9 +133,6 @@ class AttributeControllerTest extends AcceptanceTestCase
 
     public function testDownloadException()
     {
-        $mockStream = \Mockery::mock('GuzzleHttp\Psr7\Stream')->makePartial();
-        $mockStream->shouldReceive('eof')->once()->andReturn(true);
-        
         $this->setEloquentMockException('download');
         $this->get('/attribute/download/dGVzdGUudHh0')->assertRedirectedTo('/');
     }
