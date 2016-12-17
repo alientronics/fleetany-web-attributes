@@ -200,7 +200,8 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
         $return = AttributeRepositoryEloquent::setValues($inputs);
 
-        $this->disableExceptionHandling()->setExpectedException('ValidatorException');
+        $this->disableExceptionHandling();
+        $this->setExpectedException(Prettus\Validator\Exceptions\ValidatorException::class);
     }
     
     public function testGetAttributesWithValuesEmptyAttributes()
