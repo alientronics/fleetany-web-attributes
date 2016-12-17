@@ -172,9 +172,13 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
     public function testGetValuesException()
     {
         AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
-        $return = AttributeRepositoryEloquent::getValues('vehicle', 1);
-
-        $this->assertRedirectedTo('/');
+        
+        try {
+            $return = AttributeRepositoryEloquent::getValues('vehicle', 1);
+            $this->assertTrue(false);
+        } catch (ValidatorException $e) {
+            $this->assertTrue(true);
+        }
     }
     
     public function testSetValues()
@@ -198,10 +202,12 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         $inputs['attribute1'] = [1];
         
         AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
-        $return = AttributeRepositoryEloquent::setValues($inputs);
-
-        $this->disableExceptionHandling();
-        $this->setExpectedException(Prettus\Validator\Exceptions\ValidatorException::class);
+        try {
+            $return = AttributeRepositoryEloquent::setValues($inputs);
+            $this->assertTrue(false);
+        } catch (ValidatorException $e) {
+            $this->assertTrue(true);
+        }
     }
     
     public function testGetAttributesWithValuesEmptyAttributes()
@@ -215,9 +221,12 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
     public function testGetAttributesWithValuesException()
     {
         AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
-        $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
-
-        $this->assertRedirectedTo('/');
+        try {
+            $return = AttributeRepositoryEloquent::getAttributesWithValues('vehicle', 1);
+            $this->assertTrue(false);
+        } catch (ValidatorException $e) {
+            $this->assertTrue(true);
+        }
     }
     
     public function testGetAttributesWithValuesWithAttributes()
@@ -297,17 +306,23 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
     public function testGetKeysException()
     {
         AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
-        $return = AttributeRepositoryEloquent::getKeys('vehicle');
-    
-        $this->assertRedirectedTo('/');
+        try {
+            $return = AttributeRepositoryEloquent::getKeys('vehicle');
+            $this->assertTrue(false);
+        } catch (ValidatorException $e) {
+            $this->assertTrue(true);
+        }
     }
     
     public function testGetAttributesException()
     {
         AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
-        $return = AttributeRepositoryEloquent::getAttributes('vehicle');
-
-        $this->assertRedirectedTo('/');
+        try {
+            $return = AttributeRepositoryEloquent::getAttributes('vehicle');
+            $this->assertTrue(false);
+        } catch (ValidatorException $e) {
+            $this->assertTrue(true);
+        }
     }
     
 //     public function testDownloadFailed()
