@@ -46,7 +46,7 @@ class AttributeControllerTest extends AcceptanceTestCase
     public function testEditException()
     {
         $this->setEloquentMockException('getKey');
-        $this->get('/attribute/1/edit')->see('entity key');
+        $this->get('/attribute/1/edit')->assertRedirectedTo('/');;
     }
 
     public function testUpdateTrue()
@@ -100,7 +100,7 @@ class AttributeControllerTest extends AcceptanceTestCase
     public function testDestroyFalseException()
     {
         $this->setEloquentMockException('deleteKey');
-        $this->delete('/attribute/1')->assertRedirectedTo('attribute', ['message'=>'general.deletedregistererror']);
+        $this->delete('/attribute/1')->assertRedirectedTo('/');
     }
 
     public function testDestroy()
@@ -131,13 +131,12 @@ class AttributeControllerTest extends AcceptanceTestCase
         $this->assertEquals($this->response->status(), 404);
     }
 
-    public function testDownloadFailedException()
+    public function testDownloadException()
     {
         $mockStream = \Mockery::mock('GuzzleHttp\Psr7\Stream')->makePartial();
         $mockStream->shouldReceive('eof')->once()->andReturn(true);
         
         $this->setEloquentMockException('download');
-        $this->get('/attribute/download/dGVzdGUudHh0');
-        $this->assertEquals($this->response->status(), 404);
+        $this->get('/attribute/download/dGVzdGUudHh0')->assertRedirectedTo('/');
     }
 }
