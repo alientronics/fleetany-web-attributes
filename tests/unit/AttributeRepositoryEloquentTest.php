@@ -200,7 +200,6 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
         AttributeRepositoryEloquent::setClient($this->setGuzzleMockException());
         $return = AttributeRepositoryEloquent::setValues($inputs);
 
-        $this->setExpectedException('ValidatorException');
     }
     
     public function testGetAttributesWithValuesEmptyAttributes()
