@@ -327,9 +327,12 @@ class AttributeRepositoryEloquentTest extends UnitTestCase
     
     public function testDownloadFailed()
     {
+        $mockStream = \Mockery::mock('GuzzleHttp\Psr7\Stream')->makePartial();
+        $mockStream->shouldReceive('eof')->once()->andReturn(true);
+        
         $returnMockClient = [];
         $attributeRepo = new AttributeRepositoryEloquent();
-        $attributeRepo->setClient($this->setGuzzleMock(''));
+        $attributeRepo->setClient($this->setGuzzleMock($mockStream));
         $return = $attributeRepo->download('dGVzdGUudHh0');
 
         $this->assertEquals($return, null);
